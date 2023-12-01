@@ -20,9 +20,10 @@ const productsSchema = new Schema({
         type: Number,
         required: true,
     },
-    category:String,
-    thunbnail:String,
-   
+    category: String,
+    thumbnail: String,
+    alt: String,
+    availabilty: { type: String, enum: ['in_stock', 'out_stock'] }
 
 })
 

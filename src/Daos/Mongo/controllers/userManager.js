@@ -1,4 +1,4 @@
-import userModel from "../models/userModels.js";
+import userModel from "../models/user.models.js";
 
 class userManagerMongo {
     constructor() {
@@ -25,4 +25,4 @@ class userManagerMongo {
     async deleteUser() { }
 }
 
-export default userManagerMongo     
+export default userManagerMongo

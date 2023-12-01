@@ -1,0 +1,62 @@
+ 
+ 
+ <h2>LOGIN</h2>
+<form id="loginForm">
+
+<div class="section">
+
+    <div class="title" > Correo</div>
+    <div class="field" >
+        <input type="email" name="email" id="username" placeholder="Ingresar correo"required>
+    </div>
+</div>
+<div class="section">
+    <div class="title" >Contraseña</div>
+    <div class="field" >
+        <input type="password" name="password" id="password" placeholder="Ingresar Contraseña" required>
+        
+        </div>
+</div>
+<div class="section" >
+    <div class="button"><input type="submit" name="submit" value="Login"></div>
+    <div class="button"><a href="/register">Registrarse</a></div>
+</div>
+</form>
+<a href="/api/sessions/github">
+<button class="" >Github</button>
+</a>
+
+
+
+<script >
+    const form = document.getElementById('loginForm')
+form.addEventListener('submit', event => {
+    event.preventDefault()
+
+    const formData = new FormData(form)
+    const data = Object.fromEntries(formData)
+    fetch('/sessions/login', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json",
+
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                console.log('login exitoso')
+                window.location.href = '/'
+            } else {
+                console.log('Credenciales Invalidas')
+
+            }
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
+})
+</script>
+
+</script>
