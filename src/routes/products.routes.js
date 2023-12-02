@@ -10,10 +10,10 @@ router.get('/', (req, res) => {
 
 })
 
-router.get('/', (req, res) => {
+router.get('/products', (req, res) => {
 
 })
-router.post("/api", async (req, res) => {
+router.post("/products", async (req, res) => {
     try {
 
         const newProduct = req.body
