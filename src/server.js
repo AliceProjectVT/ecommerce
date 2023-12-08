@@ -7,18 +7,20 @@ import { engine } from "express-handlebars";
 import * as path from "path"
 import __dirname from "./utils/dirname.js"
 import { Server } from "socket.io"
+import {addLogger, logger} from "./middleware/loggers.js"
 
 
 //inicializar express
 const app = express()
-
+//Logger personalizado 
+app.use(addLogger)
 //inicializar servidor
+
 const server = app.listen(configObject.port, () => {
-    console.log(`Servidor en el puerto ${configObject.port}`)
+    logger.info(`Servidor en el puerto ${configObject.port}`)
 })
 
 const io = new Server(server);
-
 
 
 
