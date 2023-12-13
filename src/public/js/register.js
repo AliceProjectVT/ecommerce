@@ -1,4 +1,4 @@
-
+import { logger } from '../../middleware/loggers.js';
 
 const form = document.getElementById('registerForm');
 
@@ -18,9 +18,9 @@ form.addEventListener('submit', event => {
         .then(response => response.json())
         .then((data) => {
             if (data.status === 'success') {
-                console.log(data);
+                logger.info(data);
             } else {
-                console.log('Ocurrió un error durante el registro')
+                logger.error('Ocurrió un error durante el registro')
             }
         })
 

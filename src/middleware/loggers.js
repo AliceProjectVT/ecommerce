@@ -12,8 +12,8 @@ const customLevelOption = {
     },
     colors: {
         fatal: 'red',
-        error: 'yellow',
-        warning: 'orange',
+        error: 'cyan',
+        warning: 'yellow',
         info: 'green',
         debug: 'blue',
         http: 'white'
@@ -35,15 +35,21 @@ const logger = winston.createLogger({
         new winston.transports.File({
             filename: './error.log',
             level: 'warning',
-            format: winston.format.simple()
+            format: winston.format.combine(
+                winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+                winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+            )
+
+
+
         }),
     ]
 });
-export const addLogger = (req, res, next) => {
+const addLogger = (req, res, next) => {
     req.logger = logger;
     req.logger.info(`${req.method} en ${req.url}- ${new Date().toLocaleTimeString()}`);
     next()
 }
 
 
-export default logger;
+export { addLogger, logger };

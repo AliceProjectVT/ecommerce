@@ -1,7 +1,7 @@
 import { connect } from "mongoose"
 import dotenv from "dotenv"
 import program from "../utils/commander.js"
-
+import { logger } from "../middleware/loggers.js"
 
 const { mode } = program.opts()
 
@@ -20,7 +20,7 @@ const configObject = {
     codigo_github: process.env.CLIENT_SECRET_GITHUB,
     callback_github: process.env.CALLBACK_URL_GITHUB,
 }
-console.log(mode)
+logger.info(`Start in mode: \x1b[36m${mode}\x1b[0m`);
 
 
 
@@ -31,10 +31,10 @@ const dbConnect = async () => {
     try {
 
         connect(configObject.mongo_url)
-        console.log(configObject.msg_connection_db)
+        logger.info(configObject.msg_connection_db)
     } catch (error) {
 
-        console.log(`Error al conectar: ${error}`);
+        logger.fatal(`Error al conectar: ${error}`);
     }
 }
 export { dbConnect, configObject }

@@ -11,4 +11,4 @@ passport.use(new JWTStrategy({
     // ...
 }));
 
-export defaultn passport;
+export default passport;

@@ -7,7 +7,7 @@ import { engine } from "express-handlebars";
 import * as path from "path"
 import __dirname from "./utils/dirname.js"
 import { Server } from "socket.io"
-import {addLogger, logger} from "./middleware/loggers.js"
+import { addLogger, logger } from "./middleware/loggers.js"
 
 
 //inicializar express
@@ -58,7 +58,7 @@ app.set("views", path.resolve(__dirname + "/views"))
 //middleware para manejar errores
 
 app.use((err, req, res, next) => {
-    console.error(err.message)
+    logger.error(err.message)
     return res.status(500).send("Algo se rompió")
 })
 
@@ -70,7 +70,7 @@ app.use((err, req, res, next) => {
 
 
 io.on("connection", (socket) => {
-    console.log("socket conectado")
+    logger.info("socket conectado")
     //! INICIO SOCKET
 
     //*** CRUD RTP  ***/
