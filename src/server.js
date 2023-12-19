@@ -6,54 +6,60 @@ import { configObject, dbConnect } from "./config/config.js"
 import { engine } from "express-handlebars";
 import * as path from "path"
 import __dirname from "./utils/dirname.js"
-import { Server } from "socket.io"
+import { Server as HTTPServer } from "http"
+import { Server as IOServer } from "socket.io"
 import { addLogger, logger } from "./middleware/loggers.js"
 
 
 //inicializar express
 const app = express()
-//Logger personalizado 
-app.use(addLogger)
-//inicializar servidor
-
-const server = app.listen(configObject.port, () => {
-    logger.info(`Servidor en el puerto ${configObject.port}`)
-})
-
-const io = new Server(server);
-
+const httpServer = new HTTPServer(app)
+const io = new IOServer(httpServer);
+//conexión a MONGO
+dbConnect()
 
 
 //dotenv para ocultar información 
 dotenv.config()
 
-
+//Logger personalizado 
+app.use(addLogger)
 app.use(cors())
-//puerto a utilizar
 
 
 
 
+//inicializar servidor
+httpServer.listen(configObject.port, (err) => {
+    if (err) logger.error(err.message)
+    logger.info(`Servidor en el puerto ${configObject.port}`)
+})
 
+
+
+
+console.log("Proceso", process.pid)
 
 // iniciar enlace 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-
-app.set()
-
-//conexión a MONGO
-dbConnect()
-
-//usar rutas del Router
-app.use(router)
-
 //archivos estaticos
 app.use(express.static(path.resolve(__dirname + "/public")))
 //motor de plantillas
 app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
 app.set("views", path.resolve(__dirname + "/views"))
+//usar rutas del Router
+
+app.set()
+app.use(router)
+
+
+
+
+
+
+
 
 //middleware para manejar errores
 

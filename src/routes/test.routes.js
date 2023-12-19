@@ -32,15 +32,15 @@ router.get('/info', (req, res) => {
 router.get('/warning', (req, res) => {
     req.logger.warning("WARNING")
     res.send("WARNING")
-}); 
+});
 router.get('/error', (req, res) => {
     req.logger.error("ERROR")
     res.send("ERROR")
-}); 
+});
 router.get('/fatal', (req, res) => {
     req.logger.fatal("FATAL")
     res.send("FATAL")
-}); 
+});
 
 
 export default router;

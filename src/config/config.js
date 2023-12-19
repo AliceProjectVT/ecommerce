@@ -11,7 +11,7 @@ dotenv.config({
 
 
 const configObject = {
-    port: process.env.PORT,
+    port: process.env.PORT ,
     mongo_url: process.env.DB_URI,
     msg_connection_db: process.env.DB_CONNECT_MSG,
     jwt_private_key: process.env.JWT_CLAVE_PRIVADA,
@@ -19,7 +19,9 @@ const configObject = {
     ID_github_client: process.env.CLIENT_ID_GITHUB,
     codigo_github: process.env.CLIENT_SECRET_GITHUB,
     callback_github: process.env.CALLBACK_URL_GITHUB,
+    node_mode: process.env.NODE_ENV,
 }
+
 logger.info(`Start in mode: \x1b[36m${mode}\x1b[0m`);
 
 
