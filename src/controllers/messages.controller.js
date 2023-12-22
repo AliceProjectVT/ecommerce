@@ -1,7 +1,6 @@
-import messageDaoMongo from "./messageDaosMongo.js";
 import { logger } from "../../../middleware/loggers.js"
+import { messageService } from "../../../services/service.js";
 
-const messageService = new messageDaoMongo()
 
 class messageController {
 

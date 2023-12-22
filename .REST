@@ -8,3 +8,13 @@ POST  http://localhost:4000/api/messages
 PUT  http://localhost:4000/api/messages/312
 ###
 DELETE  http://localhost:4000/api/messages/123
+
+###
+GET http://localhost:4000/api/users
+
+
+###
+
+GET http://localhost:4000/api/users/658500e1233b7fc75c6a39d6
+###
+DELETE http://localhost:4000/api/users/6585243570b81707e19664de

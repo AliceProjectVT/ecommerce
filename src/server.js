@@ -44,7 +44,7 @@ console.log("Proceso", process.pid)
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 //archivos estaticos
-app.use(express.static(path.resolve(__dirname + "/public")))
+app.use(express.static(path.resolve(__dirname, 'public')));
 //motor de plantillas
 app.engine("handlebars", engine())
 app.set("view engine", "handlebars")

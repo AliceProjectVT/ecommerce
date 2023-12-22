@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import sendMail from '../utils/sendMailer.js'
 
 const router = Router();
 
@@ -42,5 +43,12 @@ router.get('/fatal', (req, res) => {
     res.send("FATAL")
 });
 
+//!!! FIN TESTEO LOGGER !!!
+//!!! TESTEO MAILER!!!
+router.get('/nodemailer', async (req, res) => {
+    await sendMail('islamartinezd@gmail.com', 'ESTO TA DURO PAPI', '<h1>Testing Nodemailer</h1> <img src="cid:imagen" />')
+    res.send("MAIL ENVIADO")
+}
+)
 
 export default router;

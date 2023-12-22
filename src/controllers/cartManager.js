@@ -9,17 +9,7 @@ const productAll = new ProductManager();
 class CartManager {
     constructor() { }
 
-    async connectToDatabase() {
-        try {
-            await mongoose.connect('mongodb://localhost:27017/your_database_name', {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            });
-            console.log('Conectado a MongoDB');
-        } catch (error) {
-            console.error('Error conectando a MongoDB:', error);
-        }
-    }
+   
 
     async readCarts() {
         try {

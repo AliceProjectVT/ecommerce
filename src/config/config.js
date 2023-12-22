@@ -20,6 +20,8 @@ const configObject = {
     codigo_github: process.env.CLIENT_SECRET_GITHUB,
     callback_github: process.env.CALLBACK_URL_GITHUB,
     node_mode: process.env.NODE_ENV,
+    nodemail_pass: process.env.NODEMAILER_PASSWORD,
+    nodemail_user: process.env.NODEMAILER_USER,
 }
 
 logger.info(`Start in mode: \x1b[36m${mode}\x1b[0m`);

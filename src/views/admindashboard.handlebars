@@ -1,37 +1,53 @@
-   
-   
-   {{!-- CRUD --}}
-    <div class="formulario">
-        <h1>Formulario Crear,Actualizar, Eliminar Productos</h1>
-        <form id="prod-form">
-            <input type="hidden" id="productId" name="productId">
-            <div class="inputs">
-                <div>
-                    <input type="text" id="desc" autocomplete="off" placeholder="Ingrese Descripcion" required>
-                    <input type="text" id="img" autocomplete="off" placeholder="Ingrese Imagen" required>
-                    <input type="number" id="price" autocomplete="off" placeholder="Ingrese Precio" required>
-                </div>
-                <div>
-                    <input type="number" id="stock" autocomplete="off" placeholder="Ingrese Stock" required>
-                    <input type="text" id="cat" autocomplete="off" placeholder="Ingrese Categoria" required>
-                    <select name="available" id="available">
-                        <option value="in_stock" selected="true">Con Stock</option>
-                        <option value="out_stock">Sin Stock</option>
-                    </select>
-                </div>
-            </div>
-            <label>Para actualizar y eliminar producto haz clic en el producto en la lista a tu izquierda</label>
-            <div class="botones">
-                <button type="submit" id="btnCrear">Guardar</button>
-                
-                <input type="checkbox" id="eliminarProducto" name="eliminarProducto">
-                Eliminar
-                
-            </div>
-        </form>
-    </div>
-</div>
+    <h2>Crear Nuevo Producto</h2>
+    <form id="productForm">
+        <label for="title">Título:</label><br>
+        <input type="text" id="title" name="title"><br>
 
+        <label for="description">Descripción:</label><br>
+        <textarea id="description" name="description"></textarea><br>
+
+        <label for="code">Código:</label><br>
+        <input type="text" id="code" name="code"><br>
+
+        <label for="price">Precio:</label><br>
+        <input type="number" id="price" name="price"><br>
+
+        <label for="stock">Stock:</label><br>
+        <input type="number" id="stock" name="stock"><br>
+
+        <label for="category">Categoría:</label><br>
+        <input type="text" id="category" name="category"><br>
+
+        <label for="thumbnails">URL de la Imagen:</label><br>
+        <input type="text" id="thumbnails" name="thumbnails"><br>
+
+        <input type="submit" value="Crear Producto">
+
+        <script>
+            socket.on('conexion-establecida', (mensaje) => {
+  console.log('Mensaje del servidor:', mensaje);
+  
+  
+});
+
+socket.on('newProduct', (data) => {
+  console.log(data)
+  const productsElements = document.getElementById("products");
+  console.log(productsElements)
+  const productElement = document.createElement('li');
+  productElement.innerHTML = `${data.title} - ${data.description}`;
+  productsElements.appendChild(productElement);
+
+});
+
+socket.on('deleteProduct', (id) => {
+  console.log(id)
+  const productElement = document.getElementById(id).remove();
+  console.log(productElement)
+  
+});
+        </script>
+    {{!-- </form>
 <script>
     document.getElementById('logoutButton').addEventListener('click', cerrarSesion);
     function cerrarSesion() {
@@ -158,4 +174,4 @@ socket.on("success", (data) => {
     });
 });
 </script>
-
+ --}}

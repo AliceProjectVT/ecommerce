@@ -13,6 +13,9 @@ router.get("/catalog", (req, res) => {
 router.get("/login", (req, res) => {
     res.render("login")
 })
+.get("/dash", (req, res) => {
+    res.render("admindashboard")
+})
 
 
 export default router
