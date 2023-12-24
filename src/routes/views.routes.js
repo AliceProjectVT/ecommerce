@@ -1,21 +1,13 @@
 import { Router } from "express";
+import { index, register, catalog, login, dash, recovery } from "../controllers/views.controller.js"
 
 const router = Router()
-router.get("/", (req, res) => {
-    res.render("index")
-})
-router.get("/register", (req, res) => {
-    res.render("register")
-})
-router.get("/catalog", (req, res) => {
-    res.render("products")
-})
-router.get("/login", (req, res) => {
-    res.render("login")
-})
-.get("/dash", (req, res) => {
-    res.render("admindashboard")
-})
-
+router
+    .get("/", index)
+    .get("/register", register)
+    .get("/catalog", catalog)
+    .get("/login", login)
+    .get("/dash", dash)
+    .get('/recovery', recovery)
 
 export default router

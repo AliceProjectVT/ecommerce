@@ -1,6 +1,5 @@
 //Los controllers usan los servicios para haceUserr las operaciones
 import { userService } from '../services/service.js';
-import { createHash } from '../utils/hash.js';
 import userModel from "../Daos/Mongo/models/user.models.js";
 
 const getUsers = async (req, res) => {

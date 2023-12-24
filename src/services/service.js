@@ -7,4 +7,4 @@ const productService = new productDao()
 
 
 
-export { userService }
+export { userService, productService }

@@ -3,3 +3,6 @@
 2023-12-22 01:39:53 error: No default engine was specified and no extension was provided.
 2023-12-22 02:23:50 error: sendMail is not defined
 2023-12-22 02:24:20 error: sendMail is not defined
+2023-12-22 04:13:41 error: Failed to lookup view "catalog" in views directory "C:\Users\PC-Diego\OneDrive\Escritorio\Nueva carpeta (3)\ecomerce\ecommerce\src\views"
+2023-12-22 04:13:48 error: Failed to lookup view "catalog" in views directory "C:\Users\PC-Diego\OneDrive\Escritorio\Nueva carpeta (3)\ecomerce\ecommerce\src\views"
+2023-12-22 18:21:34 error: Failed to lookup view "recovery" in views directory "C:\Users\PC-Diego\OneDrive\Escritorio\Nueva carpeta (3)\ecomerce\ecommerce\src\views"
