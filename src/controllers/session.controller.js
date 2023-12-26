@@ -2,6 +2,7 @@ import { createHash, isCorrectPassword } from "../utils/hash.js";
 import { userService } from "../services/service.js";
 import userModel from "../Daos/Mongo/models/user.models.js";
 import sendMail from "../utils/sendMailer.js";
+import { generateToken } from "../utils/jsonwebtoken.js";
 
 const register = async (req, res) => {
     try {
@@ -35,24 +36,36 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+    console.log('Llegó al código del login');
     const { email, password } = req.body;
-    try {
-        if (!email || !password) {
-            return res.status(400).send({ status: "error", error: "Valores incompletos" });
-        }
-        const user = await userModel.findOne({ email });
-        if (!user) {
-            console.log("El correo no se encuentra registrado.");
-            return res.status(401).send({ status: 'error', error: 'El correo no se encuentra registrado.' });
-        }
-        if (!isCorrectPassword(user.password, password)) {
-            return res.status(401).send({ status: 'error', error: 'La contraseña es incorrecta.' });
-        }
-        res.send({ status: "success", payload: user._id });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({ status: "error", error });
-    }
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+        return res.status(401).send({ status: 'error', error: 'Usuario no existe' });
+    } console.log('encontró el usuario')
+
+    if (!isCorrectPassword(user.password, password)) {
+        return res.status(401).send({ status: 'error', error: 'Datos ingresados incorrectos' });
+    } console.log('contraseña correcta')
+
+
+    const token = generateToken({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        role: user.role
+    })
+    
+    res.cookie('cookieToken', token, {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true
+    }).status(200).send({
+        status: 'success',
+        message: 'loggen successfully'
+    })
+
+
 }
 
 const recovery = async (req, res) => {

@@ -9,20 +9,47 @@ import __dirname from "./utils/dirname.js"
 import { Server as HTTPServer } from "http"
 import { Server as IOServer } from "socket.io"
 import { addLogger, logger } from "./middleware/loggers.js"
-
-
+import initializePassport from "./config/passport.config.js"
+import MongoStore from "connect-mongo"
+import cookieParser from "cookie-parser"
+import session from "express-session"
 //inicializar express
 const app = express()
 const httpServer = new HTTPServer(app)
 const io = new IOServer(httpServer);
+
 //conexión a MONGO
 dbConnect()
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+// app.use(session({
+//     store: MongoStore.create({
+//         mongoUrl: configObject.mongoUrl,
+//         mongoOptions: {
+//             useNewUrlParser: true,
+//             useUnifiedTopology: true,
 
+//         },
+//         ttl: 600,
+//     }),
+//     secret: 'secreto',
+//     resave: true,
+//     saveUninitialized: true,
+// }))
+initializePassport()
+// app.use(passport.initialize())
+app.use(cookieParser('secreto'))
+app.use(session({
+    secret: 'secreto',
+    resave: true,
+    saveUninitialized: true,
 
-//dotenv para ocultar información 
+}))
+
+//dotenv para ocultar información
 dotenv.config()
 
-//Logger personalizado 
+//Logger personalizado
 app.use(addLogger)
 app.use(cors())
 
@@ -40,9 +67,8 @@ httpServer.listen(configObject.port, (err) => {
 
 console.log("Proceso", process.pid)
 
-// iniciar enlace 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+// iniciar enlace
+
 //archivos estaticos
 app.use(express.static(path.resolve(__dirname, 'public')));
 //motor de plantillas
@@ -72,7 +98,7 @@ app.use((err, req, res, next) => {
 
 
 
-//Conexión a socket.io	
+//Conexión a socket.io
 
 
 io.on("connection", (socket) => {

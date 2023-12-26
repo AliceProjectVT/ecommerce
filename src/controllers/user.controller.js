@@ -2,7 +2,9 @@
 import { userService } from '../services/service.js';
 import userModel from "../Daos/Mongo/models/user.models.js";
 
-const getUsers = async (req, res) => {
+
+
+const getUsers = async  (req, res) => {
     try {
         const users = await userService.get();
         res.send({ status: 'success', payload: users })
@@ -10,6 +12,9 @@ const getUsers = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+
 const getUser = async (req, res) => {
     try {
 

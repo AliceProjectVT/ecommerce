@@ -1,28 +1,80 @@
-<form id="loginForm" class="login-form">
 
+<form id="loginForm" class="login-form">
 
     <div class="section">
         <h2>LOGIN</h2>
+
         <div class="title">Correo</div>
+
         <div class="field">
-            <input type="email" name="email" id="username" placeholder="Ingresar correo" required>
+
+            <input type="email" name="email" id="email" placeholder="Ingresar correo" required>
         </div>
+
     </div>
+
     <div class="section">
+
         <div class="title">Contraseña</div>
+
         <div class="field">
+
             <input type="password" name="password" id="password" placeholder="Ingresar Contraseña" required>
+
         </div>
+
     </div>
+
     <div class="section">
+
         <div class="button"><input type="submit" name="submit" value="Login"></div>
-        <div class="button"><a href="/register">Registrarse</a></div>
-        <div class="button"><a href="/api/sessions/github"><button class="">Github</button></a></div>
+        
     </div>
 </form>
+
+
+
+
+
+<div class="button"><a href="/register">Registrarse</a></div>
+<div class="button"><a href="/api/sessions/github"><button class="">Github</button></a></div>
 <a href="">¿No tienes cuenta? Registrate! </a>
 <a href="/recovery">¿Olvidaste tu contraseña?</a>
+<a href="/api/sessions/github">
+<button>Github</button>
+</a>
+<script>const form = document.querySelector('#loginForm');
+form.addEventListener('submit', event => {
+    event.preventDefault();
 
-<script src="/js/login.js">
-    
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+console.log('Data a enviar:', JSON.stringify(data));
+ fetch('/sessions/login', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+    return response.json();
+})
+.then(data => {
+    console.log('accedió a la data', data);
+    if (data.status === 'success') {
+        window.location.href = '/catalog';
+    } else {
+        Swal.fire('Credenciales Invalidas', 'Revisa tu correo y contraseña', 'error');
+    }
+})
+.catch(error => {
+    console.error("Error en la solicitud:", error);
+});
+
+});
+
 </script>
