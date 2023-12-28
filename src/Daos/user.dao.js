@@ -1,6 +1,6 @@
 //los DAOs usan los modelos para hacer las operaciones
 import userModel from "../Daos/Mongo/models/user.models.js";
-import {logger} from "../middleware/loggers.js";
+import { logger } from "../middleware/loggers.js";
 
 class userDao {
     constructor() {
@@ -34,7 +34,15 @@ class userDao {
         }
 
     }
-    async update() { }
+    async update(filter, update) {
+        try {
+            return await this.model.updateOne(filter, update);
+        } catch (error) {
+            logger.error('Error en DAOs', error);
+            throw error; // Asegurémonos de lanzar el error para que pueda ser manejado en la capa superior si es necesario
+        }
+    }
+    
     async delete(filter) {
         try {
             return await this.model.deleteOne(filter);
@@ -42,6 +50,6 @@ class userDao {
             logger.error('error en daos', error);
         }
     }
-  }
+}
 
 export default userDao

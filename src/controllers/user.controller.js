@@ -4,7 +4,7 @@ import userModel from "../Daos/Mongo/models/user.models.js";
 
 
 
-const getUsers = async  (req, res) => {
+const getUsers = async (req, res) => {
     try {
         const users = await userService.get();
         res.send({ status: 'success', payload: users })
@@ -55,7 +55,7 @@ const deleteUser = async (req, res) => {
     try {
         const user = await userService.getBy({ _id: req.params.uid });
         if (user) {
-            
+
             await userService.delete({ _id: req.params.uid });
             res.json({ message: 'Usuario eliminado' });
         } else {
@@ -85,10 +85,22 @@ const loginUser = async (req, res) => {
     });
 }
 
+const premium_user = async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const result = await userService.update({ _id: uid }, {
+            role: "user_premium"
+        });
+        res.send('Usuario actualizado a premium');
+    } catch (error) {
+        res.status(500).json({ message: 'Error al actualizar el usuario a premium', error: error.message });
+    }
+};
 export {
     getUsers,
     getUser,
     updateUser,
     deleteUser,
-    
+    premium_user,
+
 };

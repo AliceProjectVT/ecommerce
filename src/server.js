@@ -13,6 +13,7 @@ import initializePassport from "./config/passport.config.js"
 import MongoStore from "connect-mongo"
 import cookieParser from "cookie-parser"
 import session from "express-session"
+import productsIoSocket from "./utils/productoIoSocket.js"
 //inicializar express
 const app = express()
 const httpServer = new HTTPServer(app)
@@ -106,18 +107,18 @@ io.on("connection", (socket) => {
     //! INICIO SOCKET
 
     //*** CRUD RTP  ***/
-    socket.on("newProduct", (newProduct) => {
-        products.addProduct(newProduct)
-        socket.emit("succes", "Producto agregado correctamente")
-    });
-    socket.on("updateProduct", (updateProduct) => {
-        products.updateProduct(updateProduct)
-        socket.emit("succes", "Producto actualizado correctamente")
-    });
-    socket.on("deleteProduct", (deleteProduct) => {
-        products.deleteProduct(deleteProduct)
-        socket.emit("succes", "Producto eliminado correctamente")
-    });
+    // socket.on("newProduct", (newProduct) => {
+    //     products.addProduct(newProduct)
+    //     socket.emit("succes", "Producto agregado correctamente")
+    // });
+    // socket.on("updateProduct", (updateProduct) => {
+    //     products.updateProduct(updateProduct)
+    //     socket.emit("succes", "Producto actualizado correctamente")
+    // });
+    // socket.on("deleteProduct", (deleteProduct) => {
+    //     products.deleteProduct(deleteProduct)
+    //     socket.emit("succes", "Producto eliminado correctamente")
+    // });
 
     //! FIN CRUD RTP  !//
 
@@ -151,3 +152,4 @@ io.on("connection", (socket) => {
 
     //! FIN SOCKET
 })
+productsIoSocket(io)

@@ -56,7 +56,7 @@ const login = async (req, res) => {
         email: user.email,
         role: user.role
     })
-    
+
     res.cookie('cookieToken', token, {
         maxAge: 60 * 60 * 1000,
         httpOnly: true
@@ -83,9 +83,14 @@ const recovery = async (req, res) => {
     <div><a href="/change-pass">Cambiar contraseña</a></>`
     sendMail({ to: user.email, subject: "Recuperar contraseña", html })
     //Logica para caducar enlace
-    const token = 'tokengenericopararecuperar'
     //logica a seguir, 
     //const token = generateToken({first_name: user.first_name, last_name: user.last_name, email: user.email role:'user'})
+    const token = generateToken({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        role: user.role
+    })
     res.cookie('cookieToken', token, {
         maxAge: 60 * 60,
         httpOnly: true,

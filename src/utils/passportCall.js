@@ -17,7 +17,7 @@ function passportCall(strategy) {
         });
       }
 
-      req.user = user;
+      req.user = user.user;
       next();
     })(req, res, next);
   };

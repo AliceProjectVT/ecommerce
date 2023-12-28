@@ -1,177 +1,44 @@
-    <h2>Crear Nuevo Producto</h2>
-    <form id="productForm">
-        <label for="title">Título:</label><br>
-        <input type="text" id="title" name="title"><br>
+<div>Real time product</div>
+{{!-- pintar todos los productos --}}
+<div id="listProducts"></div>
+{{!-- mandar productos al servidor - api rest - socket emit--}}
 
-        <label for="description">Descripción:</label><br>
-        <textarea id="description" name="description"></textarea><br>
+<form id="form-product" >
+    <input type="text" name="title" placeholder="nombre del producto">
+    <input type="text" name="description" placeholder="descripción del producto">
+    <input type="number" name="price" placeholder="precio del producto">
+    <input type="number" name="stock" placeholder="stock del producto">
+    <input type="text" name="code" placeholder="código del producto">
+    <input type="submit" >
+</form>
 
-        <label for="code">Código:</label><br>
-        <input type="text" id="code" name="code"><br>
 
-        <label for="price">Precio:</label><br>
-        <input type="number" id="price" name="price"><br>
 
-        <label for="stock">Stock:</label><br>
-        <input type="number" id="stock" name="stock"><br>
 
-        <label for="category">Categoría:</label><br>
-        <input type="text" id="category" name="category"><br>
 
-        <label for="thumbnails">URL de la Imagen:</label><br>
-        <input type="text" id="thumbnails" name="thumbnails"><br>
-
-        <input type="submit" value="Crear Producto">
-
-        <script>
-            socket.on('conexion-establecida', (mensaje) => {
-  console.log('Mensaje del servidor:', mensaje);
-  
-  
-});
-
-socket.on('newProduct', (data) => {
-  console.log(data)
-  const productsElements = document.getElementById("products");
-  console.log(productsElements)
-  const productElement = document.createElement('li');
-  productElement.innerHTML = `${data.title} - ${data.description}`;
-  productsElements.appendChild(productElement);
-
-});
-
-socket.on('deleteProduct', (id) => {
-  console.log(id)
-  const productElement = document.getElementById(id).remove();
-  console.log(productElement)
-  
-});
-        </script>
-    {{!-- </form>
+<script src="/socket.io/socket.io.js"></script>
 <script>
-    document.getElementById('logoutButton').addEventListener('click', cerrarSesion);
-    function cerrarSesion() {
-        localStorage.removeItem("token");
-        window.location.href = '/';
-    }
-    document.addEventListener("DOMContentLoaded", function () {
-        // Obtener referencia a la lista de productos y al formulario
-        const productsList = document.getElementById("productsContainer");
-        const descInput = document.getElementById("desc");
-        const imgInput = document.getElementById("img");
-        const priceInput = document.getElementById("price");
-        const stockInput = document.getElementById("stock");
-        const catInput = document.getElementById("cat");
-        const idInput = document.getElementById("productId");
+    console.log('real')
+const socket = io()
 
-        // Agregar un evento de clic a la lista de productos
-        productsList.addEventListener("click", function (event) {
-            // Verificar si el clic fue en un elemento de la lista
-            const clickedElement = event.target;
-            if (clickedElement.tagName === "LI") {
-                // Obtener la información del producto desde los atributos del elemento de la lista
-                const description = clickedElement.getAttribute("data-description");
-                const image = clickedElement.getAttribute("data-image");
-                const price = clickedElement.getAttribute("data-price");
-                const stock = clickedElement.getAttribute("data-stock");
-                const category = clickedElement.getAttribute("data-category");
-                const productId = clickedElement.getAttribute("data-id");
+socket.on('products', dataProducts => {
+    console.log(dataProducts)
+})
 
-                // Actualizar los campos del formulario con la información del producto
-                descInput.value = description;
-                imgInput.value = image;
-                priceInput.value = price;
-                stockInput.value = stock;
-                catInput.value = category;
-                idInput.value = productId;
+const formProduct = document.querySelector('#form-product')
 
-            }
-        });
-    });
+const handleOnSubmit = evt => {
+    evt.preventDefault()
+
+    socket.emit('addProduct', {
+        title: formProduct.elements.title.value,
+        description: formProduct.elements.description.value,
+        stock: formProduct.elements.stock.value,
+        price: formProduct.elements.price.value,
+        code: formProduct.elements.code.value
+    })
+    formProduct.reset()
+}
+
+formProduct.addEventListener('submit', handleOnSubmit)
 </script>
-<script src="/socket.io/socket.io.js">
-
-//CRUD productos en tiempo real con socket IO
-socket.on("products", (data) => {
-    // Obtener referencia a la lista de productos
-    const productsList = document.getElementById("productsContainer");
-
-    // Crear una lista de elementos
-    const listElements = data.map((product) => {
-        return `<li data-id="${product.id}" data-description="${product.description}" data-image="${product.image}" data-price="${product.price}" data-stock="${product.stock}" data-category="${product.category}">${product.description}</li>`;
-    });
-
-    // Actualizar la lista de productos
-    productsList.innerHTML = listElements.join("");
-});
-
-</script>
-<script >
-    const socket = io()
-
-document.getElementById('prod-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const idInput = document.getElementById('productId');
-    const id = idInput.value;
-    idInput.value = '';
-
-    const descInput = document.getElementById('desc');
-    const description = descInput.value;
-    descInput.value = '';
-
-    const imgInput = document.getElementById('img');
-    const image = imgInput.value;
-    imgInput.value = '';
-
-    const priceInput = document.getElementById('price');
-    const price = priceInput.value;
-    priceInput.value = '';
-
-    const stockInput = document.getElementById('stock');
-    const stock = stockInput.value;
-    stockInput.value = '';
-
-    const catInput = document.getElementById('cat');
-    const category = catInput.value;
-    catInput.value = '';
-
-    const availableInput = document.getElementById('available');
-    const available = availableInput.value;
-
-    const eliminarProductoCheckbox = document.getElementById('eliminarProducto');
-    const eliminarProducto = eliminarProductoCheckbox.checked;
-
-    if (eliminarProducto) {
-        // Enviar mensaje si el checkbox está seleccionado
-        socket.emit("delProd", { id: id });
-    }else{
-        const newProduct = {
-            description: description,
-            image:image,
-            price: price,
-            stock: stock,
-            category: category,
-            availability: available
-        }
-    
-        if (id === '') {
-            // Si el ID está vacío, es un nuevo producto (crear)
-            socket.emit("newProduct", newProduct);
-        } else {
-            // Si el ID tiene un valor, es un producto existente (actualizar)
-            socket.emit("updateProduct", { id: id, newProduct });
-        }
-    }
-});
-
-socket.on("success", (data) => {
-   console.log("Success: ", "Todo en orden");
-    .then((result) => {
-        if (result.isConfirmed) {
-            location.reload(); // Recarga la página cuando se hace clic en Aceptar
-        }
-    });
-});
-</script>
- --}}

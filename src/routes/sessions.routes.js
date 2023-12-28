@@ -1,5 +1,5 @@
 import Router from "express"
-import { register, login, recovery } from "../controllers/session.controller.js"
+import { register, login, recovery, } from "../controllers/session.controller.js"
 
 
 const router = Router()
@@ -13,6 +13,7 @@ router
     .get('githubcallback', (req, res) => {
         res.send("github callback")
     })
+    
 // .get('/github', passport.autenticate('github', { scope: ['user:email'] }), async (req, res) => { })
 
 //     .get('/githubcallback', passport.autenticate('github', { failureRedirect: '/login' }), async (req, res) => {
