@@ -16,3 +16,4 @@
 2023-12-26 00:18:47 error: Unknown authentication strategy "jwt"
 2023-12-28 18:33:36 error: Unknown authentication strategy "cookieToken"
 2023-12-28 18:33:39 error: Unknown authentication strategy "cookieToken"
+2023-12-29 00:45:53 error: error en daos users validation failed: first_name: Path `first_name` is required.

@@ -37,7 +37,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/requestBodies/User"
+                $ref: "#/components/schemas/User"
         "400":
           description: Falta alguno de los campos requeridos
         "401":
@@ -80,7 +80,7 @@ components:
       properties:
         _id:
           type: ObjectId
-          description: El id del usuario autogenerada por la base de datos
+          description: El id del usuario auto-generada por la base de datos
         first_name:
           type: string
           description: El nombre del usuario
@@ -113,22 +113,22 @@ components:
         updatedAt: "2021-05-01T00:00:00.000Z"
   requestBodies:
     createUser:
-        type: object
-        properties:
-          first_name:
-            type: string
-            description: El nombre del usuario
-          last_name:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: El nombre del usuario
+        last_name:
             type: string
             description: El apellido del usuario (Opcional)
-          email:
+        email:
             type: string
             description: El email del usuario
-          password:
+        password:
             type: string
             description: La contraseña del usuario
-        example:
-          first_name: "Juan"
-          last_name: "Perez"
-          email: "juan@correo.com"
-          password: "123456"
+      example:
+        first_name: "Juan"
+        last_name: "Perez"
+        email: "juan@correo.com"
+        password: "123456"

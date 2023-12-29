@@ -30,7 +30,7 @@ router.get('/:cid', async (req, res) => {
     res.send(
         {
             status: "success",
-            payload:cart
+            payload: cart
         }
     )
 }
@@ -38,23 +38,23 @@ router.get('/:cid', async (req, res) => {
 router.put('/:cid/products/:pid', async (req, res) => {
     const { cid, pid } = req.params
     const { qty } = req.body
-    const cart = await cartSrvice.addItemToCart({cid, pid, qty})
+    const cart = await cartSrvice.addItemToCart({ cid, pid, qty })
     res.send(
         {
             status: "success",
-            payload:cart
+            payload: cart
         }
     )
 })
 
 router.delete('/:cid/products/:pid', async (req, res) => {
     const { cid, pid } = req.params
-    console.log(cid,pid)
-    const result = await cartSrvice.removeItemFromCart({cid, pid})
+    console.log(cid, pid)
+    const result = await cartSrvice.removeItemFromCart({ cid, pid })
     res.send(
         {
             status: "success",
-            payload:result
+            payload: result
         }
     )
 })

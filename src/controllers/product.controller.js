@@ -1,10 +1,9 @@
-import productDao from "../models/dao/product.dao.js";
-const { ProductCreationError } = require("../Errors/customErrors.js");
-import {logger} from '../utils/logger.js'
+import { productService } from "../services/service.js";
+import { logger } from '../middleware/loggers.js'
 
 
 // se instancia la clase de productos
-const productDao = new ProductDao(); 
+
 
 // funcion para obtener todos los productos
 const getProducts = async (req, res) => {
@@ -14,12 +13,12 @@ const getProducts = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
         const sortBy = req.query.sortBy || "price";
-        
+
         //parseInt se utiliza para convertir los valores de los parametros de consulta a números enteros. Si no se proporciona un parametro específico, se establece un valor predeterminado (page=1, limit=20 y sortBy="price").
         const options = { page: page, limit: limit, sort: { [sortBy]: 1 } };
-        
+
         //productos paginados desde el DAO (Data Access Object) el DAO realiza una consulta a la base de datos para obtener los productos según las opciones proporcionadas.
-        const result = await productDao.getPaginatedProducts(options);
+        const result = await productService.getPaginatedProducts(options);
 
         // condicional si !NO encuentra los productos retorna un error 
         if (!result.products.length) {
@@ -44,7 +43,7 @@ const getProducts = async (req, res) => {
 const getProductById = async (req, res) => {
     const productId = req.params.pid;
     try {
-        const result = await productDao.getProductById(productId);
+        const result = await productService.getProductById(productId);
         if (!result) {
             res.status(404).json({ message: "Producto no encontrado" });
         } else {
@@ -99,7 +98,7 @@ function isValidProduct(product) {
         return false;
     }
     // si se cumplen las validaciones retorna true (producto valido y continua con la funcion saveproduct)
-    
+
 }
 
 const saveProduct = async (req, res) => {
@@ -114,7 +113,7 @@ const saveProduct = async (req, res) => {
         newProduct.owner = req.user.email; // Asigna el email del usuario autenticado al campo owner del producto
 
 
-        const result = await productDao.saveProduct(newProduct);
+        const result = await productService.saveProduct(newProduct);
         logger.info("Producto creado correctamente:", result);
         res.json({ status: "success producto creado", result: result });
     } catch (error) {
@@ -122,9 +121,9 @@ const saveProduct = async (req, res) => {
         //     logger.error("Error al crear el producto:", error.message);
         //     res.status(error.statusCode).send({ status: "error", error: error.message });
         // } else {
-            logger.error("Error general al crear el producto:", error);
-            console.error(error);
-            res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
+        logger.error("Error general al crear el producto:", error);
+        console.error(error);
+        res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
         // }
     }
 };
@@ -133,7 +132,7 @@ const saveProduct = async (req, res) => {
 /* const saveProduct = async (req, res) => {
     const newProduct = req.body;
     try {           
-        const result = await productDao.saveProduct(newProduct);
+        const result = await productService.saveProduct(newProduct);
         res.json({ status: "success producto creado", result: result });
     } catch (error) {
         console.log(error);
@@ -145,10 +144,10 @@ const saveProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     const productId = req.params.id;
     const updatedProduct = req.body;
-    
+
     // intenta acceder a un producto especifico de la base de datos y mediante postman se modifica lo que se requiere y lo que no se mantiene tal cual esta 
     try {
-        const result = await productDao.updateProduct(productId, updatedProduct);
+        const result = await productService.updateProduct(productId, updatedProduct);
         logger.info("Producto actualizado correctamente:", result);
         res.json({ status: "success producto actualizado", result: result });
     } catch (error) {
@@ -165,7 +164,7 @@ const deleteProduct = async (req, res) => {
 
     try {
         // Buscar el producto por su ID
-        const product = await productDao.getProductById(productId);
+        const product = await productService.getProductById(productId);
 
         if (!product) {
             return res.status(404).json({ message: "Producto no encontrado" });
@@ -176,7 +175,7 @@ const deleteProduct = async (req, res) => {
             return res.status(403).json({ message: "No tienes permisos para eliminar este producto" });
         }
 
-        const result = await productDao.deleteProduct(productId);
+        const result = await productService.deleteProduct(productId);
         logger.info("Producto eliminado correctamente:", result);
         res.json({ status: "success producto eliminado", result: result });
     } catch (error) {
@@ -191,7 +190,7 @@ const deleteProduct = async (req, res) => {
 /* const deleteProduct = async (req, res) => {
     const productId = req.params.id;
     try {
-        const result = await productDao.deleteProduct(productId);
+        const result = await productService.deleteProduct(productId);
         logger.info("Producto eliminado correctamente:", result);
         res.json({ status: "success producto eliminado", result: result });
     } catch (error) {
@@ -201,10 +200,71 @@ const deleteProduct = async (req, res) => {
     }
 };
  */
-module.exports = {
+
+
+//!!! API PRODUCTS
+const getItems = async (req, res) => {
+    try {
+        const result = await productService.get();
+        res.json({ status: "success", result: result });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
+    }
+}
+const getItem = async (req, res) => {
+    try {
+        const result = await productService.getBy();
+        res.json({ status: "success", result: result });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
+    }
+}
+const createItem = async (req, res) => {
+    const newItem = req.body;
+    try {
+        const result = await productService.create(newItem);
+        res.json({ status: "success", result: result });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
+    }
+}
+async (req, res) => {
+    const newProduct = req.body;
+    try {
+        if (!isValidProduct(newProduct)) {
+            // throw new ProductCreationError("datos del producto invalidos"); 
+            logger.error("datos del producto invalidos");
+        }
+
+        // Asigna el usuario autenticado al producto antes de guardarlo
+        newProduct.owner = req.user.email; // Asigna el email del usuario autenticado al campo owner del producto
+
+
+        const result = await productService.saveProduct(newProduct);
+        logger.info("Producto creado correctamente:", result);
+        res.json({ status: "success producto creado", result: result });
+    } catch (error) {
+        // if (error instanceof ProductCreationError) {
+        //     logger.error("Error al crear el producto:", error.message);
+        //     res.status(error.statusCode).send({ status: "error", error: error.message });
+        // } else {
+        logger.error("Error general al crear el producto:", error);
+        console.error(error);
+        res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
+        // }
+    }
+};
+
+export {
     getProducts,
     getProductById,
     saveProduct,
     deleteProduct,
     updateProduct,
+    getItems,
+    getItem,
+    createItem,
 };

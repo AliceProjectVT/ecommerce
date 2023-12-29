@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { getItems, getItem, createItem } from '../controllers/product.controller.js'
 
 const router = Router()
 
@@ -10,24 +11,9 @@ router.get('/', (req, res) => {
 
 })
 
-router.get('/products', (req, res) => {
-
-})
-router.post("/products", async (req, res) => {
-    try {
-
-        const newProduct = req.body
-
-        let result = await productManager.createProduct(newProduct)
-        res.send({
-            status: 'success',
-            payload: result
-        })
-    } catch (error) {
-        console.log(error)
-    }
-
-})
+router.get('/products', getItems)
+router.get('/products', getItem)
+router.post("/products", createItem)
 
 
 export default router

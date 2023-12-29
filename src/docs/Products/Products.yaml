@@ -1,0 +1,131 @@
+paths:
+  /api/products:
+    get:
+      tags:
+        - products
+      summary: Obtiene todos los productos
+      responses:
+        "200":
+          description: Los productos fueron obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "400":
+          description: Solicitud incorrecta
+        "401":
+          description: No Autorizado para acceder a la API
+        "404":
+          description: Productos no encontrados
+        "500":
+          description: Fallo interno del servidor
+    post:
+      summary: Crea un nuevo producto
+      tags:
+        - products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/createProduct"
+      responses:
+        "201":
+          description: El producto fue creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "400":
+          description: Falta alguno de los campos requeridos
+        "401":
+          description: El producto ya existe
+        "500":
+          description: Fallo interno del servidor
+
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: El id del producto auto-generado por la base de datos
+        title:
+          type: string
+          description: El nombre del producto
+        description:
+          type: string
+          description: La descripción del producto
+        price:
+          type: number
+          description: El precio del producto
+        stock:
+          type: number
+          description: La cantidad de productos en stock
+        image:
+          type: string
+          description: La imagen del producto
+        category:
+          type: string
+          description: La categoría del producto
+        createdBy:
+          type: string
+          description: Se vincula al usuario que creó el producto
+        quantity:
+          type: number
+          description: La cantidad de productos totales
+        isValid:
+          type: string
+          description: Utilizado para borrado logico
+      example:
+        _id: ObjectId('5f9b3b3b8b0b3b1b3b3b3b3b')
+        title: "Producto 1"
+        description: "Descripcion del producto 1"
+        price: 100
+        stock: 10
+        image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Fvector%2Ficono"
+        category: "Categoria 1"
+        createdBy: "ObjectId('5f9b3b3b8b0b3b1b3b3b3b3b')"
+        quantity: 10
+        isValid: true
+  requestBodies:
+    createProduct:          
+      type: object
+      properties:
+        title:
+          type: string
+          description: El nombre del producto
+        description:
+          type: string
+          description: La descripción del producto
+        price:
+          type: number
+          description: El precio del producto
+        stock:
+           type: number
+           description: La cantidad de productos en stock
+        image:
+          type: string
+          description: La imagen del producto
+        category:
+          type: string
+          description: La categoría del producto
+        createdBy:
+          type: string
+          description: Se vincula al usuario que creó el producto
+        quantity:
+          type: number
+          description: La cantidad de productos totales
+        isValid:
+          type: string
+          description: Utilizado para borrado logico
+      example:
+              title: "Producto 1"
+              description: "Descripcion del producto 1"
+              price: 100
+              stock: 10
+              image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Fvector%2Ficono"
+              category: "Categoria 1"
+              quantity: 10
+             

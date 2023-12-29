@@ -2,6 +2,11 @@
 import { userService } from '../services/service.js';
 import userModel from "../Daos/Mongo/models/user.models.js";
 
+//!!IMPORT PARA API DE USUARIOS
+import { createHash, isCorrectPassword } from "../utils/hash.js";
+import sendMail from "../utils/sendMailer.js";
+//!!FIN IMPORT PARA API DE USUARIOS
+
 
 
 const getUsers = async (req, res) => {
@@ -100,10 +105,30 @@ const premium_user = async (req, res) => {
 //!!RUTA PARA DOCUMENTACIÓN	
 const createUser = async (req, res) => {
     try {
-        const user = req.body;
+        const { first_name, last_name, email, password } = req.body;
+        if (!first_name || !last_name || !email || !password) {
+            return res.status(400).send({ status: "error", error: "Incomplete values" });
+        }
+        const exist = await userModel.findOne({ email });
+        if (exist) {
+            console.log("El correo se encuentra en uso.");
+            return res.status(401).send({ status: 'error', error: 'El correo se encuentra en uso.' });
+        }
+
+        const hashedPassword = await createHash(password);
+        const user = {
+            first_name,
+            last_name,
+            email,
+            password: hashedPassword
+        };
         const result = await userService.create(user);
-        res.send({ status: "success", payload: result._id });
+
+        res.status(201).send({ status: "success", payload: result._id });
+        await sendMail(`${user.email}`, "Se ha registrado correctamente.", `<div> Bienvenido </div>`);
+
     } catch (error) {
+        console.log(error);
         res.status(500).send({ status: "error", error });
     }
 }
