@@ -21,6 +21,9 @@ const catalog = (req, res) => {
 const recovery = (req, res) => {
     res.render("passwordRecovery")
 }
+const changePassword = (req, res) => {
+    res.render("changePassword")
+}
 export {
     index,
     register,
@@ -28,5 +31,7 @@ export {
     dash,
     resetPassword,
     catalog,
-    recovery
+    recovery,
+    changePassword
+    
 }

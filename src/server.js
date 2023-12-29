@@ -14,6 +14,9 @@ import MongoStore from "connect-mongo"
 import cookieParser from "cookie-parser"
 import session from "express-session"
 import productsIoSocket from "./utils/productoIoSocket.js"
+import swaggerJsDoc from "swagger-jsdoc"
+import swaggerUiExpress from 'swagger-ui-express'
+
 //inicializar express
 const app = express()
 const httpServer = new HTTPServer(app)
@@ -47,6 +50,9 @@ app.use(session({
 
 }))
 
+
+
+
 //dotenv para ocultar información
 dotenv.config()
 
@@ -54,8 +60,19 @@ dotenv.config()
 app.use(addLogger)
 app.use(cors())
 
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Swagger API",
+            description: "Api para documentar"
+        },
 
+    }, apis: [`src/docs/**/*.yaml`]
+}
+const specs = swaggerJsDoc(swaggerOptions)
 
+app.use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 //inicializar servidor
 httpServer.listen(configObject.port, (err) => {
@@ -75,7 +92,7 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 //motor de plantillas
 app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
-app.set("views", path.resolve(__dirname + "/views"))
+app.set("views", (__dirname + "/views"))
 //usar rutas del Router
 
 app.set()

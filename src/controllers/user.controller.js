@@ -96,11 +96,22 @@ const premium_user = async (req, res) => {
         res.status(500).json({ message: 'Error al actualizar el usuario a premium', error: error.message });
     }
 };
+
+//!!RUTA PARA DOCUMENTACIÓN	
+const createUser = async (req, res) => {
+    try {
+        const user = req.body;
+        const result = await userService.create(user);
+        res.send({ status: "success", payload: result._id });
+    } catch (error) {
+        res.status(500).send({ status: "error", error });
+    }
+}
 export {
     getUsers,
     getUser,
     updateUser,
     deleteUser,
     premium_user,
-
+    createUser,
 };

@@ -14,3 +14,5 @@
 2023-12-25 20:02:07 error: err is not defined
 2023-12-25 20:02:43 error: err is not defined
 2023-12-26 00:18:47 error: Unknown authentication strategy "jwt"
+2023-12-28 18:33:36 error: Unknown authentication strategy "cookieToken"
+2023-12-28 18:33:39 error: Unknown authentication strategy "cookieToken"

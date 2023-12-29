@@ -3,6 +3,7 @@ import { userService } from "../services/service.js";
 import userModel from "../Daos/Mongo/models/user.models.js";
 import sendMail from "../utils/sendMailer.js";
 import { generateToken } from "../utils/jsonwebtoken.js";
+import passport from "passport";
 
 const register = async (req, res) => {
     try {
@@ -16,7 +17,6 @@ const register = async (req, res) => {
             return res.status(401).send({ status: 'error', error: 'El correo se encuentra en uso.' });
         }
 
-
         const hashedPassword = await createHash(password);
         const user = {
             first_name,
@@ -26,7 +26,7 @@ const register = async (req, res) => {
         };
         const result = await userService.create(user);
 
-        res.send({ status: "success", payload: result._id });
+        res.status(201).send({ status: "success", payload: result._id });
         await sendMail(`${user.email}`, "Se ha registrado correctamente.", `<div> Bienvenido </div>`);
 
     } catch (error) {
@@ -49,28 +49,25 @@ const login = async (req, res) => {
         return res.status(401).send({ status: 'error', error: 'Datos ingresados incorrectos' });
     } console.log('contraseña correcta')
 
-
     const token = generateToken({
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
         role: user.role
-    })
+    });
 
     res.cookie('cookieToken', token, {
         maxAge: 60 * 60 * 1000,
         httpOnly: true
     }).status(200).send({
         status: 'success',
-        message: 'loggen successfully'
-    })
-
-
-}
+        message: 'logged in successfully'
+    });
+};
 
 const recovery = async (req, res) => {
-    const { email } = req.body
-    const user = await userService.getBy({ email })
+    const { email } = req.body;
+    const user = await userService.getBy({ email });
     if (!user) {
         console.log("El correo no se encuentra registrado.");
         return res.status(404).send({
@@ -78,27 +75,72 @@ const recovery = async (req, res) => {
             error: 'El correo no se encuentra registrado.'
         });
     }
-    //form de cambio de contraseña ingresar email y repetir email
-    const html = `
-    <div><a href="/change-pass">Cambiar contraseña</a></>`
-    sendMail({ to: user.email, subject: "Recuperar contraseña", html })
-    //Logica para caducar enlace
-    //logica a seguir, 
-    //const token = generateToken({first_name: user.first_name, last_name: user.last_name, email: user.email role:'user'})
+
     const token = generateToken({
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
         role: user.role
-    })
+    });
+
+    const resetPass = `http://localhost:4000/change-pass?token=${token}`;
+
+    const html = `
+    <div><a href="${resetPass}">Cambiar contraseña</a></div>`;
+    sendMail({ to: user.email, subject: "Recuperar contraseña", html });
+
     res.cookie('cookieToken', token, {
         maxAge: 60 * 60,
         httpOnly: true,
-    }).send('Correo enviado')
-}
+    }).send('Correo enviado');
+};
+const resetPassword = async (req, res) => {
+    const { password, passwordConfirm } = req.body;
+    const { cookieToken } = req.cookies;
+    const { email } = verifyToken(cookieToken)
+    console.log(email)
+
+    if (password !== passwordConfirm) {
+        return res.send({
+            status: 'error',
+            error: 'Las contraseñas no coinciden',
+        });
+    }
+
+    try {
+
+        const hashedPassword = await createHash(password);
+
+
+        const userUpdate = await userService.update({ password: hashedPassword }, { email: cookieToken });
+
+
+        if (!userUpdate) {
+            return res.send({
+                status: 'error',
+                error: 'El correo no se encuentra registrado',
+            });
+        }
+
+        console.log({ cookieToken });
+        console.log(password, passwordConfirm);
+
+        res.send({
+            status: 'success',
+            message: 'La contraseña se cambió correctamente',
+        });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).send({
+            status: 'error',
+            error: 'Error interno del servidor al cambiar la contraseña',
+        });
+    }
+};
 
 export {
     register,
     login,
-    recovery
+    recovery,
+    resetPassword
 };

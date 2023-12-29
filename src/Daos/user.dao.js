@@ -36,13 +36,16 @@ class userDao {
     }
     async update(filter, update) {
         try {
+            // Use updateOne to update a document based on the filter
             return await this.model.updateOne(filter, update);
         } catch (error) {
+            // Log the error and rethrow it
             logger.error('Error en DAOs', error);
-            throw error; // Asegurémonos de lanzar el error para que pueda ser manejado en la capa superior si es necesario
+            throw error; // Ensure that the error is thrown to be handled in the higher layer if necessary
         }
     }
-    
+
+
     async delete(filter) {
         try {
             return await this.model.deleteOne(filter);

@@ -1,0 +1,134 @@
+paths:
+  /api/users/:
+    get:
+      tags:
+        - users
+      summary: Obtiene a todos los usuarios
+      responses:
+        "200":
+          description: Los usuarios fueron obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "400":
+          description: Solicitud incorrecta
+        "401":
+          description: No Autorizado para acceder a la API
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Fallo interno del servidor
+    post:
+      summary: Crea un nuevo usuario
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/createUser"    
+      responses:
+        "201":
+          description: El usuario fue creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/requestBodies/User"
+        "400":
+          description: Falta alguno de los campos requeridos
+        "401":
+          description: El correo se encuentra en uso      
+        "500":
+          description: Fallo interno del servidor
+
+  /api/users/{uid}:
+    get:
+      summary: Obtiene un usuario por su id
+      tags:
+        - users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: Se ingresa el id del usuario que se desea obtener
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El usuario fue obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Solicitud incorrecta
+        "401":
+          description: No Autorizado para acceder a la API
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Fallo interno del servidor
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: El id del usuario autogenerada por la base de datos
+        first_name:
+          type: string
+          description: El nombre del usuario
+        last_name:
+          type: string
+          description: El apellido del usuario (Opcional)
+        email:
+          type: string
+          description: El email del usuario
+        password:
+          type: string
+          description: La contraseña del usuario
+        role:
+          type: string
+          description: El rol del usuario
+        createdAt:
+          type: string
+          description: La fecha de creación del usuario
+        updatedAt:
+          type: string
+          description: La fecha de actualización del usuario
+      example:
+        _id: ObjectId('658600a45b0fb9b4eceaa757'')
+        first_name: "Juan"
+        last_name: "Perez"
+        email: "juan@correo.com"
+        password: "123456"
+        role: "admin"
+        createdAt: "2021-05-01T00:00:00.000Z"
+        updatedAt: "2021-05-01T00:00:00.000Z"
+  requestBodies:
+    createUser:
+        type: object
+        properties:
+          first_name:
+            type: string
+            description: El nombre del usuario
+          last_name:
+            type: string
+            description: El apellido del usuario (Opcional)
+          email:
+            type: string
+            description: El email del usuario
+          password:
+            type: string
+            description: La contraseña del usuario
+        example:
+          first_name: "Juan"
+          last_name: "Perez"
+          email: "juan@correo.com"
+          password: "123456"
