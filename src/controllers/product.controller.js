@@ -50,14 +50,15 @@ const getProductById = async (req, res) => {
             const formattedProduct = {
                 title: result.title,
                 description: result.description,
-                code: result.code,
                 price: result.price,
                 stock: result.stock,
                 category: result.category,
-                quantity: result.quantity
-                // agregar mas propiedades si se necesita
+                thumbnails: result.thumbnails,
+                createdBy: result.createdBy,
+                quantity: result.quantity,
+                isValid: result.isValid,
             };
-            res.render("productDetail", { product: formattedProduct });
+            res.status(200).render("productDetail", { product: formattedProduct });
         }
     } catch (error) {
         console.error(error);
@@ -187,26 +188,14 @@ const deleteProduct = async (req, res) => {
 
 
 
-/* const deleteProduct = async (req, res) => {
-    const productId = req.params.id;
-    try {
-        const result = await productService.deleteProduct(productId);
-        logger.info("Producto eliminado correctamente:", result);
-        res.json({ status: "success producto eliminado", result: result });
-    } catch (error) {
-        logger.error("Error al eliminar el producto:", error);
-        console.log(error);
-        res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
-    }
-};
- */
+
 
 
 //!!! API PRODUCTS
 const getItems = async (req, res) => {
     try {
         const result = await productService.get();
-        res.json({ status: "success", result: result });
+        res.status(200).json({ status: "success", result: result });
     } catch (error) {
         console.log(error);
         res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
@@ -222,10 +211,10 @@ const getItem = async (req, res) => {
     }
 }
 const createItem = async (req, res) => {
-    const newItem = req.body;
+    const newProduct = req.body;
     try {
-        const result = await productService.create(newItem);
-        res.json({ status: "success", result: result });
+        const result = await productService.create(newProduct);
+        res.status(200).json({ status: "success", result: result });
     } catch (error) {
         console.log(error);
         res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
@@ -235,11 +224,9 @@ async (req, res) => {
     const newProduct = req.body;
     try {
         if (!isValidProduct(newProduct)) {
-            // throw new ProductCreationError("datos del producto invalidos"); 
             logger.error("datos del producto invalidos");
         }
 
-        // Asigna el usuario autenticado al producto antes de guardarlo
         newProduct.owner = req.user.email; // Asigna el email del usuario autenticado al campo owner del producto
 
 
@@ -247,16 +234,63 @@ async (req, res) => {
         logger.info("Producto creado correctamente:", result);
         res.json({ status: "success producto creado", result: result });
     } catch (error) {
-        // if (error instanceof ProductCreationError) {
-        //     logger.error("Error al crear el producto:", error.message);
-        //     res.status(error.statusCode).send({ status: "error", error: error.message });
-        // } else {
+
         logger.error("Error general al crear el producto:", error);
         console.error(error);
-        res.status(500).send({ status: "error", error: "Algo salio mal intenta mas tarde" });
-        // }
+        res.status(500).send({ status: "error", error: "Error interno del servidor" });
+
     }
 };
+const deleteItem = async (req, res) => {
+    try {
+        const pid = req.params.pid;
+        const product = await productService.getBy({ _id: pid });
+        if (product) {
+            await productService.delete({ _id: pid });
+            res.status(200).json({ status: "success", message: "Producto eliminado correctamente" });
+        } else {
+
+            res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({ status: "error", error: "Error interno del servidor" });
+    }
+}
+
+const updateItem = async (req, res) => {
+    try {
+
+        const findProduct = await productService.getBy({ _id: req.params.pid });
+
+        if (!findProduct) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        findProduct.title = req.body.title || findProduct.title;
+        findProduct.description = req.body.description || findProduct.description;
+        findProduct.price = req.body.price || findProduct.price;
+        findProduct.stock = req.body.stock || findProduct.stock;
+        findProduct.category = req.body.category || findProduct.category;
+        findProduct.thumbnails = req.body.thumbnails || findProduct.thumbnails;
+        findProduct.quantity = req.body.quantity || findProduct.quantity;
+        findProduct.isValid = req.body.isValid || findProduct.isValid;
+
+        const updatedProduct = await productService.update({ _id: req.params.pid }, findProduct);
+
+        if (updatedProduct.nModified > 0) {
+            res.status(200).json({ status: "success", message: "Producto actualizado correctamente", data: updatedProduct });
+        } else {
+            res.status(404).json({ status: "error", message: "Documento no encontrado o no se realizaron cambios", data: updatedProduct });
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: "error", error: "Error interno del servidor" });
+    }
+};
+
 
 export {
     getProducts,
@@ -267,4 +301,6 @@ export {
     getItems,
     getItem,
     createItem,
+    deleteItem,
+    updateItem,
 };

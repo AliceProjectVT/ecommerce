@@ -1,19 +1,23 @@
 import { Router } from 'express'
-import { getItems, getItem, createItem } from '../controllers/product.controller.js'
+import { getItems, getItem, createItem, deleteItem, updateItem } from '../controllers/product.controller.js'
 
 const router = Router()
 
 
 
 
-router.get('/', (req, res) => {
-    res.send({ list: [1, 2, 3] })
 
-})
+router
+    .post("/products", createItem)
 
-router.get('/products', getItems)
-router.get('/products', getItem)
-router.post("/products", createItem)
+    .get('/products', getItems)
+
+    .get('/products/:pid', getItem)
+
+    .delete('/products/:pid', deleteItem)
+
+    .put('/products/:pid', updateItem)
+
 
 
 export default router

@@ -17,3 +17,9 @@
 2023-12-28 18:33:36 error: Unknown authentication strategy "cookieToken"
 2023-12-28 18:33:39 error: Unknown authentication strategy "cookieToken"
 2023-12-29 00:45:53 error: error en daos users validation failed: first_name: Path `first_name` is required.
+2023-12-29 21:55:25 error: error en daos products validation failed: thumbnails: Path `thumbnails` is required., category: Path `category` is required., stock: Path `stock` is required., price: Path `price` is required., description: Path `description` is required., title: Path `title` is required.
+2023-12-29 21:57:54 error: error en daos products validation failed: thumbnails: Path `thumbnails` is required., category: Path `category` is required., stock: Path `stock` is required., price: Path `price` is required., description: Path `description` is required., title: Path `title` is required.
+2023-12-29 21:59:38 error: error en daos products validation failed: thumbnails: Path `thumbnails` is required., category: Path `category` is required., stock: Path `stock` is required., price: Path `price` is required., description: Path `description` is required., title: Path `title` is required.
+2023-12-29 22:03:09 error: error en daos products validation failed: thumbnails: Path `thumbnails` is required., category: Path `category` is required., stock: Path `stock` is required., price: Path `price` is required., description: Path `description` is required., title: Path `title` is required.
+2023-12-29 22:03:32 error: error en daos products validation failed: thumbnails: Path `thumbnails` is required., category: Path `category` is required., stock: Path `stock` is required., price: Path `price` is required., description: Path `description` is required., title: Path `title` is required.
+2023-12-29 22:28:26 error: Unexpected token } in JSON at position 32

@@ -30,7 +30,7 @@ paths:
             schema:
               $ref: "#/components/requestBodies/createProduct"
       responses:
-        "201":
+        "200":
           description: El producto fue creado correctamente
           content:
             application/json:
@@ -43,6 +43,85 @@ paths:
         "500":
           description: Fallo interno del servidor
 
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto por su id
+      tags:
+        - products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Se ingresa el id del producto que se desea obtener
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El producto fue obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "400":
+          description: Solicitud incorrecta
+        "404":
+          description: Producto no encontrado
+        "500":
+          description: Fallo interno del servidor
+    delete:
+      summary: Elimina un producto por su id
+      tags:
+        - products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Se ingresa el id del producto que se desea eliminar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El producto fue eliminado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "400":
+          description: Solicitud incorrecta
+        "404":
+          description: Producto no encontrado
+        "500":
+          description: Fallo interno del servidor
+    put:
+      summary: Actualiza un producto por su id
+      tags:
+        - products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Se ingresa el id del producto que se desea actualizar
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateProduct"
+      responses:
+        "200":
+          description: El producto fue actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "400":
+          description: Solicitud incorrecta
+        "404":
+          description: Producto no encontrado
+        "500":
+          description: Fallo interno del servidor     
 components:
   schemas:
     Products:
@@ -84,13 +163,13 @@ components:
         description: "Descripcion del producto 1"
         price: 100
         stock: 10
-        image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Fvector%2Ficono"
+        thumbnails: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Fvector%2Ficono"
         category: "Categoria 1"
         createdBy: "ObjectId('5f9b3b3b8b0b3b1b3b3b3b3b')"
         quantity: 10
         isValid: true
   requestBodies:
-    createProduct:          
+    createProduct:
       type: object
       properties:
         title:
@@ -103,8 +182,8 @@ components:
           type: number
           description: El precio del producto
         stock:
-           type: number
-           description: La cantidad de productos en stock
+          type: number
+          description: La cantidad de productos en stock
         image:
           type: string
           description: La imagen del producto
@@ -121,11 +200,11 @@ components:
           type: string
           description: Utilizado para borrado logico
       example:
-              title: "Producto 1"
-              description: "Descripcion del producto 1"
-              price: 100
-              stock: 10
-              image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Fvector%2Ficono"
-              category: "Categoria 1"
-              quantity: 10
-             
+        title: "Producto 1"
+        description: "Descripcion del producto 1"
+        price: 100
+        stock: 10
+        thumbnails: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Fvector%2Ficono"
+        category: "Categoria 1"
+        createdBy: "5f9b3b3b8b0b3b1b3b3b3b3b"
+        quantity: 10

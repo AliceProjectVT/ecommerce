@@ -1,4 +1,5 @@
 import productModel from "./Mongo/models/product.model.js";
+import { logger } from "../middleware/loggers.js";
 
 class productDao {
     constructor() {
@@ -11,20 +12,20 @@ class productDao {
             return await this.model.find({})
 
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
     async getBy(filter) {
         try {
             return await this.model.findOne(filter);
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
     }
-    async create(newUser) {
+    async create(newProduct) {
         try {
 
-            return await this.model.create(newUser);
+            return await this.model.create(newProduct);
 
         } catch (error) {
             logger.error('error en daos', error)
@@ -32,12 +33,13 @@ class productDao {
         }
 
     }
-    async update() { }
-    async delete(filter) {
+    async update(filter, update) {
         try {
-            return await this.model.deleteOne(filter);
+            // Utilizar findOneAndUpdate para obtener el documento actualizado
+            return await this.model.findOneAndUpdate(filter, update, { new: true });
         } catch (error) {
-            logger.error('error en daos', error);
+            logger.error('Error al actualizar producto', error);
+            throw error;
         }
     }
 }

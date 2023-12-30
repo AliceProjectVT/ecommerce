@@ -18,3 +18,26 @@ GET http://localhost:4000/api/users
 GET http://localhost:4000/api/users/658500e1233b7fc75c6a39d6
 ###
 DELETE http://localhost:4000/api/users/6585243570b81707e19664de
+
+
+###
+POST http://localhost:4000/api/products 
+Content-Type:aplication/json
+
+{
+  "title": "Producto 1",
+  "description": "Descripcion del producto 1",
+  "price": 100,
+  "stock": 10,
+  "thumbnails": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Fvector%2Ficono",
+  "category": "Categoria 1",
+  "createdBy": "5f9b3b3b8b0b3b1b3b3b3b3b",
+  "quantity": 10
+}
+
+###
+GET http://localhost:4000/api/products 
+
+
+###
+DELETE http://localhost:4000/api/products/658f6c1b22127694a67e390e

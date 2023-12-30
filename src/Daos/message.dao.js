@@ -1,19 +1,19 @@
 
 
-class messageDaoMongo{
-    getMessages(){
+class messageDaoMongo {
+    getMessages() {
         return 'DAOS getMessages'
     }
-    getByMessage(){
+    getByMessage() {
         return 'DAOS getByMessage'
     }
-    createMessage(){
+    createMessage() {
         return 'DAOS createMessage'
     }
-    updateMessage(){
+    updateMessage() {
         return 'DAOS updateMessage'
     }
-    deleteMessage(){
+    deleteMessage() {
         return 'DAOS deleteMessage  '
     }
 
