@@ -277,14 +277,8 @@ const updateItem = async (req, res) => {
         findProduct.quantity = req.body.quantity || findProduct.quantity;
         findProduct.isValid = req.body.isValid || findProduct.isValid;
 
-        const updatedProduct = await productService.update({ _id: req.params.pid }, findProduct);
-
-        if (updatedProduct.nModified > 0) {
-            res.status(200).json({ status: "success", message: "Producto actualizado correctamente", data: updatedProduct });
-        } else {
-            res.status(404).json({ status: "error", message: "Documento no encontrado o no se realizaron cambios", data: updatedProduct });
-        }
-
+        await productService.update({ _id: req.params.pid }, findProduct);
+        res.status(200).json({ status: "success", message: "Producto actualizado correctamente", result: findProduct });
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: "error", error: "Error interno del servidor" });
