@@ -1,3 +1,4 @@
+import { ok } from "assert";
 import * as chai from "chai";
 import { stat } from "fs";
 import _ from "mongoose-paginate-v2";
@@ -8,10 +9,10 @@ const requester = supertest('http://localhost:4000');
 
 describe('test', () => {
   describe('test de products', () => {
-    //!!! CREAR EL PRIMER PRODUCTO Y AÑADIR EL ID CORRESPONDIENTE AL ENDPOINT PUT PARA ACTUALIZAR CORRECTAMENTE
+    //!!! SE RECOMIENDA CREAR VARIOS PRODUCTOS PARA REEMPLAZAR PARAMETROS DE ID EN LOS OTROS ENDPOINTS
     it('El endpoint POST /api/products debe crear un nuevo producto correctamente', async () => {
       const prodMock = {
-        title: "Producto 4",
+        title: "Producto para eliminar",
         description: "Descripción del producto 1",
         price: 100,
         stock: 10,
@@ -25,23 +26,31 @@ describe('test', () => {
       expect(_body.result).to.have.property('_id');
       expect(ok).to.be.equal(true);
     });
+
     it('El endpoint GET /api/products debe devolver un array de productos', async () => {
       const { _body, ok } = await requester.get('/api/products');
       expect(ok).to.be.equal(true);
     });
+    //*Se puede cambiar el ID por una de un producto creado anteriormente para que funcione correctamente
     it('El endpoint GET /api/products/:id debe devolver un producto con el id indicado', async () => {
       const { _body, ok } = await requester.get('/api/products/5f9b3b3b8b0b3b1b3b3b3b3b');
       expect(ok).to.be.equal(true);
     });
+    //*Se puede cambiar el ID por una de un producto creado anteriormente para que funcione correctamente
     it('El endpoint PUT /api/products/:id debe obtener un producto y modificar parametros con la información enviada', async () => {
       const prodMock = {
 
-        description: "ingrese descripcion del producto",
+        description: "esto es una descripcion",
 
       };
-      const response = await requester.put('/api/products/659b2aa284ce19a11e38a1c5').send(prodMock);
-      console.log(response)
+      const { ok } = await requester.put('/api/products/659b2aa284ce19a11e38a1c5').send(prodMock);
+      expect(ok).to.be.equal(true);
     });
 
+    //*Se puede cambiar el ID por una de un producto creado anteriormente para que funcione correctamente
+    it('El endpoint DELETE /api/products/:id debe obtener un producto y eliminarlo', async () => {
+      const { ok } = await requester.delete('/api/products/659b2aa284ce19a11e38a1c5');
+      expect(ok).to.be.equal(true);
+    });
   });
 });
