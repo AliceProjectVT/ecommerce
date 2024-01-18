@@ -7,4 +7,4 @@ process.on(message, (err, origen) => {  //captura errores no capturados en prome
     logger.fatal(err.message)
     logger.fatal(origen)
     process.exit(1)
-}   )
+})

@@ -24,6 +24,7 @@
     "passport-github2": "^0.1.12",
     "passport-jwt": "^4.0.1",
     "sass": "^1.69.5",
+    "serve-static": "^1.15.0",
     "session-file-store": "^1.5.0",
     "socket.io": "^4.7.2",
     "swagger": "^0.7.5",
@@ -47,6 +48,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/nodemailer": "^6.4.14",
     "chai": "^5.0.0",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.1",

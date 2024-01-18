@@ -5,7 +5,7 @@ import cors from "cors"
 import { configObject, dbConnect } from "./config/config.js"
 import { engine } from "express-handlebars";
 import * as path from "path"
-import __dirname from "./utils/dirname.js"
+import __dirname from "./dirname.js"
 import { Server as HTTPServer } from "http"
 import { Server as IOServer } from "socket.io"
 import { addLogger, logger } from "./middleware/loggers.js"
@@ -16,16 +16,25 @@ import session from "express-session"
 import productsIoSocket from "./utils/productoIoSocket.js"
 import swaggerJsDoc from "swagger-jsdoc"
 import swaggerUiExpress from 'swagger-ui-express'
+import { requireTokenHelper } from "./helpers/authHelpers.js"
+
+
 
 //inicializar express
 const app = express()
 const httpServer = new HTTPServer(app)
 const io = new IOServer(httpServer);
 
+
+
 //conexión a MONGO
 dbConnect()
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use((req, res, next) => {
+    res.locals.cookies = req.cookies
+    next()
+})
 // app.use(session({
 //     store: MongoStore.create({
 //         mongoUrl: configObject.mongoUrl,
@@ -49,6 +58,8 @@ app.use(session({
     saveUninitialized: true,
 
 }))
+// tomar las cookies antes de renderizar
+
 
 
 
@@ -90,12 +101,20 @@ console.log("Proceso", process.pid)
 //archivos estaticos
 app.use(express.static(path.resolve(__dirname, 'public')));
 //motor de plantillas
-app.engine("handlebars", engine())
+app.engine("handlebars", engine({
+    helpers: {
+        requireToken: requireTokenHelper
+    }
+}))
 app.set("view engine", "handlebars")
 app.set("views", (__dirname + "/views"))
 //usar rutas del Router
 
+
+
+
 app.set()
+
 app.use(router)
 
 
@@ -170,3 +189,8 @@ io.on("connection", (socket) => {
     //! FIN SOCKET
 })
 productsIoSocket(io)
+
+
+import nodemailer from 'nodemailer';
+
+

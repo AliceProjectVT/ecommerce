@@ -24,6 +24,9 @@ const recovery = (req, res) => {
 const changePassword = (req, res) => {
     res.render("changePassword")
 }
+const productos = (req, res) => {
+    res.render("catalogo")
+}
 export {
     index,
     register,
@@ -32,6 +35,7 @@ export {
     resetPassword,
     catalog,
     recovery,
-    changePassword
+    changePassword,
+    productos
     
 }

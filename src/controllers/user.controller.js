@@ -1,4 +1,3 @@
-//Los controllers usan los servicios para haceUserr las operaciones
 import { userService } from '../services/service.js';
 import userModel from "../Daos/Mongo/models/user.models.js";
 

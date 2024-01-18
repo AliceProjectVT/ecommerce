@@ -24,6 +24,16 @@ const userSchema = new Schema({
         enum: ['user', 'user_premium', 'admin'],
         default: 'user'
     },
+    documents: [
+        {
+            name: { type: String },
+            reference: { type: String },
+
+        }
+
+
+
+    ]
     // cartId: { type: mongoose.SchemaTypes.ObjectId, ref: "carts" },
 
 

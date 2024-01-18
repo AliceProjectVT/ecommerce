@@ -2,19 +2,19 @@ import { createHash, isCorrectPassword } from "../utils/hash.js";
 import { userService } from "../services/service.js";
 import userModel from "../Daos/Mongo/models/user.models.js";
 import sendMail from "../utils/sendMailer.js";
-import { generateToken } from "../utils/jsonwebtoken.js";
+import { generateToken, verifyResetToken } from "../utils/jsonwebtoken.js";
 import passport from "passport";
 
 const register = async (req, res) => {
     try {
         const { first_name, last_name, email, password } = req.body;
         if (!first_name || !last_name || !email || !password) {
-            return res.status(400).send({ status: "error", error: "Incomplete values" });
+            return res.status(400).json({ error: true, message: "Rellena todos los campos." });
         }
         const exist = await userModel.findOne({ email });
         if (exist) {
             console.log("El correo se encuentra en uso.");
-            return res.status(401).send({ status: 'error', error: 'El correo se encuentra en uso.' });
+            return res.status(401).json({ error: true, message: 'El correo se encuentra en uso.' });
         }
 
         const hashedPassword = await createHash(password);
@@ -27,7 +27,16 @@ const register = async (req, res) => {
         const result = await userService.create(user);
 
         res.status(201).send({ status: "success", payload: result._id });
-        await sendMail(`${user.email}`, "Se ha registrado correctamente.", `<div> Bienvenido </div>`);
+        try {
+            await sendMail({
+                to: `${user.email}`,
+                subject: "Se ha registrado correctamente.",
+                html: `<div> Bienvenido </div>`
+            });
+
+        } catch (error) {
+            console.log(error, "Error al enviar el correo de bienvenida");
+        }
 
     } catch (error) {
         console.log(error);
@@ -83,59 +92,62 @@ const recovery = async (req, res) => {
         role: user.role
     });
 
-    const resetPass = `http://localhost:4000/change-pass?token=${token}`;
+    const resetPass = `http://localhost:4000/change-password?token=${token}`;
 
     const html = `
     <div><a href="${resetPass}">Cambiar contraseña</a></div>`;
     sendMail({ to: user.email, subject: "Recuperar contraseña", html });
 
-    res.cookie('cookieToken', token, {
+    res.cookie('resetToken', token, {
         maxAge: 60 * 60,
         httpOnly: true,
     }).send('Correo enviado');
 };
 const resetPassword = async (req, res) => {
-    const { password, passwordConfirm } = req.body;
-    const { cookieToken } = req.cookies;
-    const { email } = verifyToken(cookieToken)
+    const { token } = req.query;
+    const validate = verifyToken(token);
+    const emailToken = tokenEmail(token)
     console.log(email)
-
-    if (password !== passwordConfirm) {
-        return res.send({
-            status: 'error',
-            error: 'Las contraseñas no coinciden',
-        });
+    if (validate) {
+        res.render('changePassword', { token, email: emailToken });
+    }
+    else {
+        res.send('El token no es valido')
     }
 
-    try {
+    // if (password !== passwordConfirm) {
+    //     return res.send({
+    //         status: 'error',
+    //         error: 'Las contraseñas no coinciden',
+    //     });
+    // }
 
-        const hashedPassword = await createHash(password);
+    // try {
 
+    //     const hashedPassword = await createHash(password);
 
-        const userUpdate = await userService.update({ password: hashedPassword }, { email: cookieToken });
+    //     const userUpdate = await userService.update({ password: hashedPassword }, { email: cookieToken });
+    //     if (!userUpdate) {
+    //         return res.send({
+    //             status: 'error',
+    //             error: 'El correo no se encuentra registrado',
+    //         });
+    //     }
 
+    //     console.log({ cookieToken });
+    //     console.log(password, passwordConfirm);
 
-        if (!userUpdate) {
-            return res.send({
-                status: 'error',
-                error: 'El correo no se encuentra registrado',
-            });
-        }
-
-        console.log({ cookieToken });
-        console.log(password, passwordConfirm);
-
-        res.send({
-            status: 'success',
-            message: 'La contraseña se cambió correctamente',
-        });
-    } catch (error) {
-        console.error('Error resetting password:', error);
-        res.status(500).send({
-            status: 'error',
-            error: 'Error interno del servidor al cambiar la contraseña',
-        });
-    }
+    //     res.send({
+    //         status: 'success',
+    //         message: 'La contraseña se cambió correctamente',
+    //     });
+    // } catch (error) {
+    //     console.error('Error resetting password:', error);
+    //     res.status(500).send({
+    //         status: 'error',
+    //         error: 'Error interno del servidor al cambiar la contraseña',
+    //     });
+    // }
 };
 
 export {

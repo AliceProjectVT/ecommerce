@@ -6,7 +6,7 @@ import authorization from "../../middleware/authorization.js"
 const router = Router()
 
 router
-    .get('/users', getUsers)
+    .get('/users', passportCall('jwt'), getUsers)
     .get('/users/:uid', getUser)
     .post('/users', createUser)
     .delete('/users/:uid', deleteUser)

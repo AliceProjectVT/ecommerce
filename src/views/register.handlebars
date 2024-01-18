@@ -30,11 +30,21 @@
         .then(response => response.json())
         .then(result => {
             if (result.error) {
-                // Show failed alert
-                Swal.fire('Failed', 'El correo ingresado ya está en uso', 'error');
+                if(result.message ==='Rellena todos los campos.'){
+                Swal.fire('Failed', 'Debes rellenar todos los campos.', 'error');
+                }
+                if(result.message ==='El correo se encuentra en uso.'){
+                Swal.fire('Failed', 'El correo se encuentra en uso.', 'error');
+                }
+               
             } else {
                 // Show success alert
                 Swal.fire('Éxito', 'Usuario registrado exitosamente', 'success');
+                // Redirect to login
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 1000);
+                
             }
         })
         .catch(error => {

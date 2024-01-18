@@ -20,7 +20,7 @@ const initializePassport = () => {
 
     const objectStrategyJwt = {
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: 'SecretKeyqueFuncionaParaFirmarElToken'
+        secretOrKey: configObject.jwt_private_key
     }
 
 
