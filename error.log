@@ -117,3 +117,11 @@ Require stack:
 2024-01-18 01:40:26 error: Cannot read properties of undefined (reading 'cookieToken')
 2024-01-18 01:43:00 error: Cannot read properties of undefined (reading 'cookieToken')
 2024-01-18 01:43:01 error: Cannot read properties of undefined (reading 'cookieToken')
+2024-01-19 00:26:44 error: Parse error on line 14:
+...mit" ></form>{{ #each products }}<
+---------------------^
+Expecting 'ID', 'STRING', 'NUMBER', 'BOOLEAN', 'UNDEFINED', 'NULL', 'DATA', got 'INVALID'
+2024-01-19 00:27:27 error: Parse error on line 15:
+...t" ></form>{{ #each products }}<
+--------------------^
+Expecting 'ID', 'STRING', 'NUMBER', 'BOOLEAN', 'UNDEFINED', 'NULL', 'DATA', got 'INVALID'

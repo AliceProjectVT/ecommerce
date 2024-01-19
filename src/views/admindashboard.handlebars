@@ -1,44 +1,87 @@
-<div>Real time product</div>
-{{!-- pintar todos los productos --}}
-<div id="listProducts"></div>
-{{!-- mandar productos al servidor - api rest - socket emit--}}
+<div class="container">
+  <aside class="aside">
+    <div>Real time product</div>
+    
+    <!-- Tu formulario aquí -->
+    <form id="form-product">
+        <input type="text" name="title" id="title" placeholder="Nombre del producto">
+        <input type="text" name="description" id="description" placeholder="Descripción del producto">
+        <input type="number" name="price"id="price" placeholder="Precio del producto">
+        <input type="number" name="stock" id="stock" placeholder="Stock para venta">
+        <input type="text" name="category" id="category" placeholder="Categoria">
+        <input type="text" name="image" id="thumbnails" placeholder="Imagen del producto">
+        <input type="text" name="cantidad" id="quantity" placeholder="Cantidad en existencia">
+        <div class="switch-container">
+            <label class="switch">
+            <h5>¿El producto está disponible?</h5>
+                <input type="checkbox">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <input type="submit">
+    </form>
+  </aside>
 
-<form id="form-product" >
-    <input type="text" name="title" placeholder="nombre del producto">
-    <input type="text" name="description" placeholder="descripción del producto">
-    <input type="number" name="price" placeholder="precio del producto">
-    <input type="number" name="stock" placeholder="stock del producto">
-    <input type="text" name="code" placeholder="código del producto">
-    <input type="submit" >
-</form>
+  <div class="main-content">
+    <h1>Productos</h1>
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Imagen</th>
+                
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Código</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Aquí van los productos -->
+        </tbody>
+      </table>
+    <div id="listProducts"></div>
+  </div>
+</div>
 
 
 
-
-
-<script src="/socket.io/socket.io.js"></script>
+{{!-- script para CRUD--}}
 <script>
-    console.log('real')
-const socket = io()
 
-socket.on('products', dataProducts => {
-    console.log(dataProducts)
-})
+const ProductForm = document.querySelector('#form-product');
+const  title = document.querySelector('#title');
+const  description = document.querySelector('#description');
+const  price = document.querySelector('#price');
+const  stock = document.querySelector('#stock');
+const  code = document.querySelector('#code');
 
-const formProduct = document.querySelector('#form-product')
+ProductForm.addEventListener('submit', e => {
+    e.preventDefault();
+    console.log("enviando datos",
+        title.value,
+        description.value,
+        price.value,
+        stock.value,
+        code.value);
 
-const handleOnSubmit = evt => {
-    evt.preventDefault()
+    socket.emit('newProduct',{
+        title: title.value,
+        description: description.value,
+        price: price.value,
+        stock: stock.value,
+        code: code.value
+    });
+ 
+});
 
-    socket.emit('addProduct', {
-        title: formProduct.elements.title.value,
-        description: formProduct.elements.description.value,
-        stock: formProduct.elements.stock.value,
-        price: formProduct.elements.price.value,
-        code: formProduct.elements.code.value
-    })
-    formProduct.reset()
-}
 
-formProduct.addEventListener('submit', handleOnSubmit)
+
 </script>
+
+
+
+
+

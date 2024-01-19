@@ -32,10 +32,6 @@
     </div>
 </form>
 
-
-
-
-
 <div class="button"><a href="/register">Registrarse</a></div>
 <div class="button"><a href="/api/sessions/github"><button class="">Github</button></a></div>
 <a href="">¿No tienes cuenta? Registrate! </a>
@@ -43,31 +39,9 @@
 <a href="/api/sessions/github">
 <button>Github</button>
 </a>
-<script >
-    const form = document.getElementById('loginForm')
-form.addEventListener('submit', event => {
-    event.preventDefault()
 
-    const formData = new FormData(form)
-    const data = Object.fromEntries(formData)
-    fetch('/sessions/login', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                window.location.href = '/catalog'
-            } else {
-                // Display SweetAlert message for invalid credentials
-                Swal.fire('Credenciales Invalidas', 'Revisa tu correo y contraseña', 'error');
-            }
-        })
-        .catch(error => {
-            console.log(error.message)
-        })
-})
+
+
+<script src="/js/login.js">
+
 </script>

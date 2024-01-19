@@ -5,52 +5,43 @@ import cors from "cors"
 import { configObject, dbConnect } from "./config/config.js"
 import { engine } from "express-handlebars";
 import * as path from "path"
-import __dirname from "./dirname.js"
-import { Server as HTTPServer } from "http"
-import { Server as IOServer } from "socket.io"
+import __dirname from "./utils/dirname.js"
 import { addLogger, logger } from "./middleware/loggers.js"
 import initializePassport from "./config/passport.config.js"
 import MongoStore from "connect-mongo"
 import cookieParser from "cookie-parser"
 import session from "express-session"
-import productsIoSocket from "./utils/productoIoSocket.js"
 import swaggerJsDoc from "swagger-jsdoc"
 import swaggerUiExpress from 'swagger-ui-express'
 import { requireTokenHelper } from "./helpers/authHelpers.js"
+import { Server } from "socket.io"
 
 
-
-//inicializar express
 const app = express()
-const httpServer = new HTTPServer(app)
-const io = new IOServer(httpServer);
+
+//*___________________________________________Socket configuraciones para Importaciones_____________________________________
+
+const httpServer = app.listen(configObject.port, () => {
+    console.log(`Servidor inicializado en el puerto ${configObject.port}`)
+})
+const socketServer = new Server(httpServer)
 
 
 
-//conexión a MONGO
+//___________________________________________Conexion a Mongo_____________________________________
 dbConnect()
+
+
+//_________________________________________________________________________________________________
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use((req, res, next) => {
     res.locals.cookies = req.cookies
     next()
 })
-// app.use(session({
-//     store: MongoStore.create({
-//         mongoUrl: configObject.mongoUrl,
-//         mongoOptions: {
-//             useNewUrlParser: true,
-//             useUnifiedTopology: true,
 
-//         },
-//         ttl: 600,
-//     }),
-//     secret: 'secreto',
-//     resave: true,
-//     saveUninitialized: true,
-// }))
 initializePassport()
-// app.use(passport.initialize())
+
 app.use(cookieParser('secreto'))
 app.use(session({
     secret: 'secreto',
@@ -58,19 +49,10 @@ app.use(session({
     saveUninitialized: true,
 
 }))
-// tomar las cookies antes de renderizar
-
-
-
-
-
-//dotenv para ocultar información
 dotenv.config()
-
-//Logger personalizado
 app.use(addLogger)
 app.use(cors())
-
+//___________________________________________Swagger/documentación_____________________________________
 const swaggerOptions = {
     definition: {
         openapi: "3.0.1",
@@ -85,112 +67,41 @@ const specs = swaggerJsDoc(swaggerOptions)
 
 app.use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
-//inicializar servidor
-httpServer.listen(configObject.port, (err) => {
-    if (err) logger.error(err.message)
-    logger.info(`Servidor en el puerto ${configObject.port}`)
-})
+//?___________________________________________Configuracion Handlebars_____________________________________
 
-
-
-
-console.log("Proceso", process.pid)
-
-// iniciar enlace
-
-//archivos estaticos
+//___________________________________________Archivos estaticos handlebars(css, js, etc...)_____________________________________
 app.use(express.static(path.resolve(__dirname, 'public')));
-//motor de plantillas
+//___________________________________________Motores para Handlebars_____________________________________
 app.engine("handlebars", engine({
     helpers: {
         requireToken: requireTokenHelper
     }
 }))
+//___________________________________________extencion de vistas_____________________________________
 app.set("view engine", "handlebars")
+//___________________________________________ruta de vistas_____________________________________
 app.set("views", (__dirname + "/views"))
-//usar rutas del Router
-
-
-
-
 app.set()
-
+//***___________________________________________Implementar router para Vistas y Endpoints_____________________________________
 app.use(router)
 
-
-
-
-
-
-
-
-//middleware para manejar errores
-
+//!!___________________________________________Manejo de errores_____________________________________
 app.use((err, req, res, next) => {
     logger.error(err.message)
     return res.status(500).send("Algo se rompió")
 })
 
-//Escuchar el puerto y traer la respuesta para confirmar que todo está correcto
 
+//*___________________________________________Socket listener_____________________________________
 
-
-//Conexión a socket.io
-
-
-io.on("connection", (socket) => {
-    logger.info("socket conectado")
-    //! INICIO SOCKET
-
-    //*** CRUD RTP  ***/
-    // socket.on("newProduct", (newProduct) => {
-    //     products.addProduct(newProduct)
-    //     socket.emit("succes", "Producto agregado correctamente")
-    // });
-    // socket.on("updateProduct", (updateProduct) => {
-    //     products.updateProduct(updateProduct)
-    //     socket.emit("succes", "Producto actualizado correctamente")
-    // });
-    // socket.on("deleteProduct", (deleteProduct) => {
-    //     products.deleteProduct(deleteProduct)
-    //     socket.emit("succes", "Producto eliminado correctamente")
-    // });
-
-    //! FIN CRUD RTP  !//
-
-
-    //*** Nodemail  ***/
-    socket.on("sendEmail", async ({ email, comment }) => {
-        let result = await WebTransport.sendMail({
-
-            from: 'chat correo <islamartinezd@gmail.com>', // sender address
-            to: email, // list of receivers
-            subject: "Hola", // Subject line
-            html: `<h1>${comment}</h1>`, // html body
-            attachments: []
-
-
-
-        })
-        socket.emit("succes", "Correo enviado correctamente");
+socketServer.on('connection', socket => {
+    logger.info("Usuario conectado id: " + socket.id)
+    socket.on('newProduct', data => {
+        console.log(data.title)
 
     })
 
-
-
-    //! Fin Nodemail /
-
-
-
-
-
-
-
-    //! FIN SOCKET
 })
-productsIoSocket(io)
-
-
-import nodemailer from 'nodemailer';
+//!___________________________________________Socket listener Close_____________________________________
 
 

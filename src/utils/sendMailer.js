@@ -11,12 +11,12 @@ const transport = nodemailer.createTransport({
     }
 });
 
-const sendMail = async ({to, subject, html}) => {
+const sendMail = async ({ to, subject, html }) => {
     return await transport.sendMail({
         from: `Testing <${configObject.nodemail_user}>`,
         to,
         subject,
-        html, 
+        html,
         attachments: [{
             filename: 'MASTERCHIEFT.jpg',
             path: './src/utils/MASTERCHIEFT.jpg',
