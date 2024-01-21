@@ -15,8 +15,10 @@ import swaggerJsDoc from "swagger-jsdoc"
 import swaggerUiExpress from 'swagger-ui-express'
 import { requireTokenHelper } from "./helpers/authHelpers.js"
 import { Server } from "socket.io"
-
-
+//! Handlebars no permitia el acceso a los datos de los objetos, por lo que se tuvo que instalar la siguiente dependencia
+import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access"
+import Handlebars from "handlebars"
+//___________________________________________Express_____________________________________
 const app = express()
 
 //*___________________________________________Socket configuraciones para Importaciones_____________________________________
@@ -30,8 +32,6 @@ const socketServer = new Server(httpServer)
 
 //___________________________________________Conexion a Mongo_____________________________________
 dbConnect()
-
-
 //_________________________________________________________________________________________________
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -72,10 +72,13 @@ app.use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 //___________________________________________Archivos estaticos handlebars(css, js, etc...)_____________________________________
 app.use(express.static(path.resolve(__dirname, 'public')));
 //___________________________________________Motores para Handlebars_____________________________________
+//?___________________________________________Configuracion Helpers_____________________________________
+
+
+
+//!_ Se tuvo que instalar la dependencia @handlebars/allow-prototype-access para que handlebars permita el acceso a los datos de los objetos
 app.engine("handlebars", engine({
-    helpers: {
-        requireToken: requireTokenHelper
-    }
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
 }))
 //___________________________________________extencion de vistas_____________________________________
 app.set("view engine", "handlebars")
@@ -95,11 +98,14 @@ app.use((err, req, res, next) => {
 //*___________________________________________Socket listener_____________________________________
 
 socketServer.on('connection', socket => {
-    logger.info("Usuario conectado id: " + socket.id)
-    socket.on('newProduct', data => {
-        console.log(data.title)
 
+    logger.info("Usuario conectado id: " + socket.id)
+
+    socket.on('mensaje', data => {
+        console.log(data)
     })
+    //? Socket broadcast para enviar a todos los usuarios conectados menos al que envia el mensaje
+
 
 })
 //!___________________________________________Socket listener Close_____________________________________

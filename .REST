@@ -36,8 +36,20 @@ Content-Type:aplication/json
 }
 
 ###
-GET http://localhost:4000/api/products 
+GET http://localhost:4000/api/products/659b2aa284ce19a11e38a1c5
 
 
 ###
-DELETE http://localhost:4000/api/products/658f6c1b22127694a67e390e
+DELETE http://localhost:4000/api/products/
+
+
+
+
+###
+GET http://localhost:4000/api/carros
+
+###
+GET http://localhost:4000/api/carro/65acb27531330aab9de81d5b
+
+###
+POST http://localhost:4000/api/carro/65acb27531330aab9de81d5b/products/659b2aa284ce19a11e38a1c5

@@ -1,42 +1,51 @@
 <h1>ESTE ES EL HOME USUARIO</h1>
 <button id="logoutButton">Cerrar Sesión</button>
-  Sesion Iniciada de {{user.email}}
+Sesion Iniciada de {{user.email}}
 <div class="container"> 
     <div class="infoProd">
         <h1>Lista de Productos</h1>
         <div class="detalleProd">
             <div id="productsContainer">
                 <ul>
-                    {{#each products}}
-                    <li>
-                        <strong>{{this.description}}</strong><br>
-                        Price: ${{this.price}}<br>
-                        Stock: {{this.stock}}<br>
-                        Category: {{this.category}}<br>
-                        <button>Agregar</button>
-                    </li>
-                    {{/each}}
+  {{#each products}}
+<div class="product-card">
+    <h3>{{title}}  </h3>
+    <strong>{{description}}</strong><br>
+    Precio:  $<strong>{{price}}</strong>   <br>
+    Disponible: {{stock}} u. <br>
+    <button class="add-to-cart-button">Añadir al carro</button>
+    <button class="view-details-button">Ver detalles</button>
+</div>
+{{/each}}
                 </ul>
-
             </div>
         </div>
     </div>
-    <div class="formulario">
-        <h1>Formulario Contactanos(CHAT)</h1>
-        <form id="email-form">
-            <input type="hidden" id="productId" name="productId">
-            <div class="inputs">
-                <div>
-                    <input type="email" id="email" autocomplete="off" placeholder="Ingrese Correo" required>
-                </div>
-                <div>
-                    <textarea id="com" autocomplete="off" placeholder="Ingrese Comentario" required rows="4"
-                        cols="50"></textarea>
-                </div>
-            </div>
-            <div class="botones">
-                <button type="submit" id="btnCorreo">Enviar</button>
-            </div>
-        </form>
-    </div>
 </div>
+
+
+<script>
+document.querySelectorAll('.add-to-cart-button').forEach(button => {
+  button.addEventListener('click', event => {
+    const productId = event.target.getAttribute('data-id');
+    addToCart(productId);
+  });
+});
+
+function addToCart(productId) {
+  // Aquí puedes hacer una solicitud AJAX a tu servidor para añadir el producto al carro
+  // Por ejemplo:
+  fetch(`/add-to-cart/${productId}`, {
+    method: 'POST',
+    credentials: 'include'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Producto añadido al carro');
+    } else {
+      alert('Hubo un error al añadir el producto al carro');
+    }
+  });
+}
+</script>

@@ -1,8 +1,9 @@
 import { createHash, isCorrectPassword } from "../utils/hash.js";
-import { userService } from "../services/service.js";
+import { userService, cartService } from "../services/service.js";
 import userModel from "../Daos/Mongo/models/user.models.js";
 import sendMail from "../utils/sendMailer.js";
 import { generateToken, verifyResetToken } from "../utils/jsonwebtoken.js";
+import { addCarts } from "./cart.controller.js";
 import passport from "passport";
 
 const register = async (req, res) => {
@@ -11,6 +12,7 @@ const register = async (req, res) => {
         if (!first_name || !last_name || !email || !password) {
             return res.status(400).json({ error: true, message: "Rellena todos los campos." });
         }
+
         const exist = await userModel.findOne({ email });
         if (exist) {
             console.log("El correo se encuentra en uso.");
@@ -24,22 +26,27 @@ const register = async (req, res) => {
             email,
             password: hashedPassword
         };
+
+        // Crear el usuario
         const result = await userService.create(user);
 
+        // Vincular el correo del usuario con el carrito
+        await addCarts(user.email);
+
         res.status(201).send({ status: "success", payload: result._id });
+
         try {
             await sendMail({
                 to: `${user.email}`,
                 subject: "Se ha registrado correctamente.",
                 html: `<div> Bienvenido </div>`
             });
-
         } catch (error) {
-            console.log(error, "Error al enviar el correo de bienvenida");
+            console.log("Error al enviar el correo de bienvenida:", error);
         }
 
     } catch (error) {
-        console.log(error);
+        console.log("Error al registrar el usuario:", error);
         res.status(500).send({ status: "error", error });
     }
 };

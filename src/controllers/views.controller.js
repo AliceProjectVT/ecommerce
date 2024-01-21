@@ -1,3 +1,6 @@
+import { productService } from "../services/service.js"
+
+
 
 const index = (req, res) => {
     res.render("index")
@@ -8,15 +11,17 @@ const register = (req, res) => {
 const login = (req, res) => {
     res.render("login")
 }
-const dash = (req, res) => {
-    res.render("admindashboard")
+const dash = async (req, res) => {
+    const allProd = await productService.get()
+    res.render("admindashboard", { products: allProd })
 }
 
 const resetPassword = (req, res) => {
     res.render("resetPassword")
 }
-const catalog = (req, res) => {
-    res.render("products")
+const catalog = async (req, res) => {
+    const allProd = await productService.get()
+    res.render("catalogo", { products: allProd })
 }
 const recovery = (req, res) => {
     res.render("passwordRecovery")
@@ -37,5 +42,5 @@ export {
     recovery,
     changePassword,
     productos
-    
+
 }

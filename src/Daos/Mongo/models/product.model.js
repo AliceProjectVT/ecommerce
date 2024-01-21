@@ -6,12 +6,12 @@ const productsCollection = "products";
 const productSchema = new Schema({
     title: {
         type: String,
-        max: 100,
+        maxlength: 100,
         required: true
     },
     description: {
         type: String,
-        max: 100,
+        maxlength: 100,
         required: true
     },
     price: {
@@ -24,12 +24,12 @@ const productSchema = new Schema({
     },
     category: {
         type: String,
-        max: 20,
+        maxlength: 20,
         required: true
     },
     thumbnails: {
         type: String,
-        max: 100,
+        maxlength: 100,
         required: true
     },
     createdBy: {
@@ -44,6 +44,16 @@ const productSchema = new Schema({
         type: Boolean,
         default: true
     }
+    //?___________________________________________Mouske Herramienta misteriosa que utilizaremos mas tarde._____________________________________
+    // creationTimestamp: {
+    //     type: Date,
+    //     default: Date.now()
+    // },
+    // updateTimestamp: {
+    //     type: Date,
+    //     default: Date.now()
+    // }
+
 });
 
 productSchema.plugin(mongoosePaginate);

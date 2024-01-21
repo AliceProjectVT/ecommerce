@@ -4,6 +4,7 @@ import sessionRoute from './sessions.routes.js'
 import userRouter from './api/users.routes.js'
 import viewsRouter from './views.routes.js'
 import testRouter from './test.routes.js'
+import cartRouter from './cart.routes.js'
 const router = Router()
 
 router.use('/api', productRoute)
@@ -11,5 +12,6 @@ router.use('/sessions', sessionRoute)
 router.use('/api', userRouter)
 router.use('/', viewsRouter)
 router.use('/test', testRouter)
+router.use('/api', cartRouter)
 
 export default router;

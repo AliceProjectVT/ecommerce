@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-
+import {Schema, model} from "mongoose";
 const cartsCollection = "carts";
 
 const cartSchema = new Schema({
@@ -20,7 +19,7 @@ const cartSchema = new Schema({
     },
 });
 
-const cartModel = mongoose.model(cartsCollection, cartSchema);
+const cartModel = model(cartsCollection, cartSchema);
 cartSchema.pre('findOne', function () {
     this.populate('products.product');
 });

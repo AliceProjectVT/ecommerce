@@ -18,70 +18,117 @@
                 <span class="slider round"></span>
             </label>
         </div>
-        <input type="submit">
+
+        
+          <input type="submit">
+        <button id="clean" type="button">Limpiar</button> 
     </form>
   </aside>
 
   <div class="main-content">
     <h1>Productos</h1>
     <div class="table-container">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Imagen</th>
-                
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Código</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="table-body">
-          <!-- Aquí van los productos -->
-        </tbody>
-      </table>
+      <!-- ... tu código HTML anterior ... -->
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Imagen</th>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      <th>Categoría</th>
+     <th>ID Creador</th>
+     <th>Cantidad</th>
+     <th>Disponible</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="table-body">
+    {{#each products}}
+      <tr>
+        <td><img src="{{image}}" alt="Imagen del producto"></td>
+        <td>{{title}}</td>
+        <td>{{description}}</td>
+        <td>{{price}}</td>
+        <td>{{stock}}</td>
+        <td>{{category}}</td>
+        <td>{{createdBy}}</td>
+        <td>{{quantity}}</td>
+        <td>{{isValid}}</td>
+
+        <!-- Añade más celdas según sea necesario -->
+        <td>
+          <!-- Añade botones de acciones, por ejemplo: -->
+          <button class="edit-button">Editar</button>
+          <button class="delete-button">Eliminar</button>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<!-- ... tu código HTML posterior ... -->
+
     <div id="listProducts"></div>
   </div>
+
+ 
+</div>
+
 </div>
 
 
 
+
 {{!-- script para CRUD--}}
+<script src="socket.io/socket.io.js" ></script>
 <script>
 
-const ProductForm = document.querySelector('#form-product');
-const  title = document.querySelector('#title');
-const  description = document.querySelector('#description');
-const  price = document.querySelector('#price');
-const  stock = document.querySelector('#stock');
-const  code = document.querySelector('#code');
-
-ProductForm.addEventListener('submit', e => {
-    e.preventDefault();
-    console.log("enviando datos",
-        title.value,
-        description.value,
-        price.value,
-        stock.value,
-        code.value);
-
-    socket.emit('newProduct',{
-        title: title.value,
-        description: description.value,
-        price: price.value,
-        stock: stock.value,
-        code: code.value
+const cleanButton = document.querySelector('#clean');
+  cleanButton.addEventListener('click', function() {
+        // Limpia los campos del formulario
+        document.querySelector('#title').value = '';
+        document.querySelector('#description').value = '';
+        document.querySelector('#price').value = '';
+        document.querySelector('#stock').value = '';
+        document.querySelector('#category').value = '';
+        document.querySelector('#thumbnails').value = '';
+        document.querySelector('#quantity').value = '';
     });
+
+const socket = io()
+
+const titleInput = document.querySelector('#title')
+const title = titleInput.value
+titleInput=''
+
+const descriptionInput = document.querySelector('#description')
+const description = descriptionInput.value
+descriptionInput=''
+
+const priceInput = document.querySelector('#price')
+const price = priceInput.value
+priceInput=''
+const stockInput = document.querySelector('#stock')
+const stock = stockInput.value
+stockInput=''
+const categoryInput = document.querySelector('#category')
+const category = categoryInput.value
+categoryInput=''
+const imageInput = document.querySelector('#thumbnails')
+const image = imageInput.value
+imageInput=''
+const quantityInput = document.querySelector('#quantity')
+const quantity = quantityInput.value
+quantityInput=''
+
  
-});
 
-
+socket.emit('mensaje', 'Estámos emitiendo desde Productos.')
 
 </script>
-
-
 
 
 

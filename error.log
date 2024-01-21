@@ -125,3 +125,10 @@ Expecting 'ID', 'STRING', 'NUMBER', 'BOOLEAN', 'UNDEFINED', 'NULL', 'DATA', got 
 ...t" ></form>{{ #each products }}<
 --------------------^
 Expecting 'ID', 'STRING', 'NUMBER', 'BOOLEAN', 'UNDEFINED', 'NULL', 'DATA', got 'INVALID'
+2024-01-20 22:42:15 error: Parse error on line 60:
+...               ID:{{}}<br>            
+-----------------------^
+Expecting 'ID', 'STRING', 'NUMBER', 'BOOLEAN', 'UNDEFINED', 'NULL', 'DATA', got 'CLOSE'
+2024-01-20 23:15:37 error: Failed to lookup view "catalog" in views directory "C:\Users\PC-Diego\this is mongo bitches\ecommerce\src/views"
+2024-01-20 23:15:39 error: Failed to lookup view "catalog" in views directory "C:\Users\PC-Diego\this is mongo bitches\ecommerce\src/views"
+2024-01-21 03:14:59 error: Error en DAOs productModel is not defined
